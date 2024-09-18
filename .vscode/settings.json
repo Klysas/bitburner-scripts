@@ -9,6 +9,7 @@
     "jsconfig.json": true,
     "NetscriptDefinitions.d.ts": true,
     ".gitignore": true,
-    "*.ps1": true
+    "*.ps1": true,
+    "**/.vscode": true
   }
 }

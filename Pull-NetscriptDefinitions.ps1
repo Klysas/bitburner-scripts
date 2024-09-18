@@ -1,4 +1,4 @@
-$url = "https://raw.githubusercontent.com/phyzical/bitburner/dev/src/ScriptEditor/NetscriptDefinitions.d.ts"
+$url = "https://raw.githubusercontent.com/bitburner-official/bitburner-src/dev/src/ScriptEditor/NetscriptDefinitions.d.ts"
 $destination = "NetscriptDefinitions.d.ts"
 
 Invoke-WebRequest -Uri $url -OutFile $destination

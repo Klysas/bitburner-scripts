@@ -31,7 +31,7 @@ export async function main(ns) {
 
 	const lines = [`Path: ${path}`, '', connectCommand];
 	if (connected) lines.push("Connected.");
-	tprintLines(ns, Math.max(...lines.map(l => l.length)), ...lines);
+	tprintLines(ns, 0, ...lines);
 }
 
 /** 

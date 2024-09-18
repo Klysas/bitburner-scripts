@@ -16,7 +16,7 @@ export async function main(ns) {
 	const files = findFiles(ns, fileSubstring);
 
 	const lines = files.length == 0 ? ["No files found."] : files.map(o => `[${o.hostname}] : ${o.file}`);
-	tprintLines(ns, Math.max(...lines.map(l => l.length)), ...lines, "", `Found ${files.length} files.`);
+	tprintLines(ns, 0, ...lines, "", `Found ${files.length} files.`);
 }
 
 /** 

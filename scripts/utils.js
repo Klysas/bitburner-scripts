@@ -96,13 +96,13 @@ export function tprintSeparator(ns, symbol, length = 50) {
 /**
  * Prints everything to Terminal surounded with separators.
  *
- * @param {NS} ns
- * @param {number=} length (Optional) Length of separator. Default = 50.
+ * @param {NS} ns Netscript instance.
+ * @param {number=} length (Optional) Length of separator. Default = 50. If 0 is provided, then it will use `length` of longest `args` value.
  * @param {string[]} lines Lines to be printed.
  **/
 export function tprintLines(ns, ...args) {
 	if (typeof args[0] === 'number') {
-		var length = args[0];
+		var length = args[0] == 0 ? Math.max(...args.map((a) => a.length ?? 0)) : args[0];
 		var lines = args.slice(1);
 	} else {
 		length = 50; // Default

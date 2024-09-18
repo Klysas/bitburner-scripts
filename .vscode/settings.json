@@ -1,12 +1,14 @@
 {
-    "bitburner.authToken": "<YOUR AUTH TOKEN>",
-    "bitburner.scriptRoot": "./",
-    "bitburner.fileWatcher.enable": true,
-    "bitburner.showPushSuccessNotification": true,
-    "bitburner.showFileWatcherEnabledNotification": true,
-    "javascript.preferences.importModuleSpecifier": "non-relative",
-    "files.exclude": {
-        "jsconfig.json": true,
-        "NetscriptDefinitions.d.ts": true,
-    },
+  "bitburner.authToken": "<YOUR AUTH TOKEN>",
+  "bitburner.scriptRoot": "./",
+  "bitburner.fileWatcher.enable": true,
+  "bitburner.showPushSuccessNotification": true,
+  "bitburner.showFileWatcherEnabledNotification": true,
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "files.exclude": {
+    "jsconfig.json": true,
+    "NetscriptDefinitions.d.ts": true,
+    ".gitignore": true,
+    "*.ps1": true
+  }
 }

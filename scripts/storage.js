@@ -1,6 +1,32 @@
 import { NEW_LINE } from "scripts/constants";
 
 //========================================================
+//	PURCHASED SERVERS
+//========================================================
+
+const PURCHASED_SERVERS_FILE = "/data/purchasedServers.txt";
+
+/** 
+ * Save hostnames of purchased servers to permanent storage.
+ * 
+ * @param {NS} ns
+ * @param {string[]} servers
+ */
+export function savePurchasedServers(ns, servers) {
+	ns.write(PURCHASED_SERVERS_FILE, servers.join(NEW_LINE), "w");
+}
+
+/** 
+ * Get hostnames of purchased servers from permanent storage.
+ * 
+ * @param {NS} ns 
+ * @returns {string[]}
+*/
+export function getPurchasedServers(ns) {
+	return ns.read(PURCHASED_SERVERS_FILE).split(NEW_LINE).filter(Boolean);
+}
+
+//========================================================
 //	LOCKED SERVERS
 //========================================================
 
@@ -23,7 +49,7 @@ export function saveLockedServers(ns, servers) {
  * @returns {string[]}
 */
 export function getLockedServers(ns) {
-	return ns.read(LOCKED_SERVERS_FILE).split(NEW_LINE);
+	return ns.read(LOCKED_SERVERS_FILE).split(NEW_LINE).filter(Boolean);
 }
 
 //========================================================
@@ -49,34 +75,34 @@ export function saveUnlockedServers(ns, servers) {
  * @returns {string[]}
 */
 export function getUnlockedServers(ns) {
-	return ns.read(UNLOCKED_SERVERS_FILE).split(NEW_LINE);
+	return ns.read(UNLOCKED_SERVERS_FILE).split(NEW_LINE).filter(Boolean);
 }
 
 //========================================================
-//	AVAILABLE SERVERS (DEPRECATED)
+//	AVAILABLE SERVERS
 //========================================================
 
-// const AVAILABLE_SERVERS_FILE = "/data/availableServers.txt";
+const AVAILABLE_SERVERS_FILE = "/data/availableServers.txt";
 
-// /** 
-//  * Save hostnames of servers with full access to permanent storage.
-//  * 
-//  * @param {NS} ns
-//  * @param {string[]} servers
-//  */
-// export function saveAvailableServers(ns, servers) {
-// 	ns.write(AVAILABLE_SERVERS_FILE, servers.join(NEW_LINE), "w");
-// }
+/**
+ * Save hostnames of servers with full access to permanent storage.
+ *
+ * @param {NS} ns
+ * @param {string[]} servers
+ */
+export function saveAvailableServers(ns, servers) {
+	ns.write(AVAILABLE_SERVERS_FILE, servers.join(NEW_LINE), "w");
+}
 
-// /** 
-//  * Get hostnames of servers with full access from permanent storage.
-//  * 
-//  * @param {NS} ns 
-//  * @returns {string[]}
-// */
-// export function getAvailableServers(ns) {
-// 	return ns.read(AVAILABLE_SERVERS_FILE).split(NEW_LINE);
-// }
+/**
+ * Get hostnames of servers with full access from permanent storage.
+ *
+ * @param {NS} ns
+ * @returns {string[]}
+ */
+export function getAvailableServers(ns) {
+	return ns.read(AVAILABLE_SERVERS_FILE).split(NEW_LINE).filter(Boolean);
+}
 
 //========================================================
 //	MONEY RESERVE

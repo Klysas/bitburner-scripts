@@ -1,4 +1,5 @@
-import { tprintLines, getAllServers } from "scripts/utils";
+import { tprintLines } from "scripts/utils";
+import { findAllServers } from "scripts/find-servers";
 
 export function autocomplete(data, args) {
 	return [".js", ".txt", ".cct", ".msg", ".lit", ".exe", ...data.servers];
@@ -33,5 +34,5 @@ export async function main(ns) {
  * @returns {Object[]} List of found files throughtout whole network.
 */
 function findFiles(ns, fileSubstring) {
-	return getAllServers(ns).flatMap(s => ns.ls(s, fileSubstring).map(f => ({ hostname: s, file: f })));
+	return findAllServers(ns).flatMap(s => ns.ls(s, fileSubstring).map(f => ({ hostname: s, file: f })));
 }

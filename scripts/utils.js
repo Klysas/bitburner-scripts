@@ -20,15 +20,6 @@ export async function retry(ns, sleepInMs, attemptsCount, func, successResult = 
 }
 
 /** 
- * @param {NS} ns 
- * @returns {string[]} All servers found.
-*/
-export function getAllServers(ns) {
-	let set = new Set(['home']);
-	return set.forEach(h => ns.scan(h).forEach(o => set.add(o))) || [...set.values()];
-}
-
-/** 
  * Checks if there are other instances running of the same script and opens them all instead.
  * 
  * @param {NS} ns

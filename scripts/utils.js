@@ -2,6 +2,24 @@ import { RESET_COLOR, MONEY_COLOR, WARNING_COLOR, ERROR_COLOR } from "scripts/co
 
 
 /** 
+ * Retries function call specified number of times and checks its output, stops when it was successful or exceeded `attemptsCount`.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {number} sleepInMs Time between attempts.
+ * @param {number} attemptsCount Maximum times to retry `func` call before returning FALSE.
+ * @param {function} func Function to call specified number of times or until it is successful.
+ * @param {any} successResult (Optional) `func` success return value. Default TRUE.
+ * @returns {Promise<boolean>} TRUE - success, otherwise FALSE.
+*/
+export async function retry(ns, sleepInMs, attemptsCount, func, successResult = true) {
+	while (attemptsCount-- > 0) {
+		if (func() == successResult) return true;
+		await ns.sleep(sleepInMs);
+	}
+	return false;
+}
+
+/** 
  * @param {NS} ns 
  * @returns {string[]} All servers found.
 */

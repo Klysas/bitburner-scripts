@@ -1,4 +1,4 @@
-import { getLoadingBar, getCurrentTimeInFormat, colorMoney, colorError, openExistingIfAlreadyRunning, formatMoney, formatRAM, parseFormattedRAM } from "scripts/utils";
+import { getLoadingBar, getCurrentTimeInFormat, colorMoney, colorError, openExistingIfAlreadyRunning, formatMoney, formatRAM, parseFormattedRAM, retry, } from "scripts/utils";
 import { getSpendableAmount } from "scripts/bank";
 import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
 
@@ -85,7 +85,7 @@ export async function main(ns) {
 
 			upgradedServers++;
 			status = `[${upgrableHostname}] successfully upgraded.`;
-			notifyServerAddedOrModified(ns, upgrableHostname); // TODO: handle when fails to notify.
+			await retry(ns, 500, 6, () => notifyServerAddedOrModified(ns, upgrableHostname));
 		}
 
 		printReport(ns, `Completed upgrade.`);

@@ -13,14 +13,10 @@ export function autocomplete(data, args) {
 // Also make sure that other instance can't start managing.
 // Save log, have log argument to see what happened.
 
-
-
 /** @param {NS} ns */
 export async function main(ns) {
 	ns.disableLog("sleep");
 	let [miningTarget] = ns.args;
-
-	
 
 	if (!miningTarget) miningTarget = getMiningTarget(ns);
 	if (!miningTarget) {
@@ -64,7 +60,6 @@ export async function main(ns) {
 		const server = ns.readPort(MINING_MANAGER_PORT);
 
 		if (server != "NULL PORT DATA") {
-
 			if (ns.getServerMaxRam(server) == 0) continue;
 			if (isRunningOptimally(ns, MINER_SCRIPT, server, miningTarget)) continue;
 
@@ -91,13 +86,13 @@ function isRunningOptimally(ns, script, server, miningTarget) {
 		&& (ns.getServerMaxRam(server) - ns.getServerUsedRam(server) < ns.getScriptRam(script));
 }
 
-/** 
- * Notifies manager about server changes/modifications.
- * 
- * @param {NS} ns 
- * @param {string} hostname Server that was added or modified. 
+/**
+ * Notifies manager about server changes.
+ *
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server that was added or modified.
  * @returns {boolean} TRUE - success, otherwise FALSE.
-*/
+ */
 export function notifyServerAddedOrModified(ns, hostname) {
 	return ns.writePort(MINING_MANAGER_PORT, hostname) === null;
 }

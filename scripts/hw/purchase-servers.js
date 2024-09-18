@@ -1,5 +1,6 @@
-import { getLoadingBar, getCurrentTimeInFormat, colorMoney, colorError, openExistingIfAlreadyRunning, formatMoney, formatRAM, parseFormattedRAM } from "scripts/utils";
+import { getLoadingBar, getCurrentTimeInFormat, colorMoney, colorError, openExistingIfAlreadyRunning, formatMoney, formatRAM, parseFormattedRAM, retry, } from "scripts/utils";
 import { getSpendableAmount } from "scripts/bank";
+import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
 
 const T_WIDTH = 460;
 const T_HEIGHT = 185;
@@ -75,7 +76,7 @@ export async function main(ns) {
 
 		purchasedServers++;
 		status = `[${newHostname}] successfully purchased.`;
-        notifyServerAddedOrModified(ns, newHostname); // TODO: handle when fails to notify.
+		await retry(ns, 500, 6, () => notifyServerAddedOrModified(ns, newHostname));
 	}
 
 	printReport(ns, `Completed purchasing.`);

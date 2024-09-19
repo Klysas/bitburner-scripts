@@ -4,6 +4,8 @@
 
 export const NEW_LINE = "\n";
 
+export const PORT_OPENING_PROGRAMS = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe", "HTTPWorm.exe", "SQLInject.exe"];
+
 //========================================================
 //	COLORS
 //========================================================

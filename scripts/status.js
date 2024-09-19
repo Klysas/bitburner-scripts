@@ -48,11 +48,11 @@ function printServersReport(ns, serversGroup) {
 			return [i.hostname, i.rootAccess, formatRAM(i.maxRam), { color: pctColor(usage), text: ns.formatPercent(usage, 0) }, i.miningTarget];
 		});
 	const columns = [
-		{ header: "Server", width: Math.max(hostnames.reduce((max, h) => Math.max(max, h.length ?? 0), 0), "Server".length) },
-		{ header: "Root access", width: 11 },
-		{ header: "Ram", width: 7 },
-		{ header: "Usage", width: 5 },
-		{ header: "Mining target", width: 18 },
+		{ header: "Server", width: 18 },
+		{ header: "Root access", width: 11, pad: 0 },
+		{ header: "Ram", width: 7, pad: 1, },
+		{ header: "Usage", width: 7, pad: 1 },
+		{ header: "Mining target", width: 18, pad: 0 },
 	];
 	PrintTable(ns, servers, columns, DefaultStyle(), ColorPrint);
 }

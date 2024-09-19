@@ -40,9 +40,10 @@ export async function main(ns) {
 	// data.push(...ns.scan('sigma-cosmetics').slice(1).map(s => [s, ns.getServerMaxRam(s), ns.getServerMaxMoney(s)]));
 
 	// We use pre-defined columns
-	// header: The text to display
-	// width : Width of the column content
-	// pad   : 0 for center, < 0 for left, > 0 for right
+	// header	 : The text to display
+	// width 	 : Width of the column content
+	// pad   	 : 0 for center, < 0 for left, > 0 for right
+	// padHeader : 0 for center, < 0 for left, > 0 for right
 	const columns = [
 		{ header: 'Servers', width: 40 },
 		{ header: 'Ram', width: 13 },
@@ -109,7 +110,7 @@ function PrintHeader(ns, columns, style, printfunc = ns.print) {
 	let printStack = [];
 	printStack.push('white', style[BAR]);
 	for (let c = 0; c < columns.length; c++) {
-		printStack.push('white', columns[c].header.padEnd(columns[c].width));
+		printStack.push('white', alignText(columns[c].header, columns[c].width, columns[c].padHeader ?? 0));
 		printStack.push('white', style[BAR]);
 	}
 	PrintStack(ns, printStack, printfunc);
@@ -125,15 +126,27 @@ function PrintLine(ns, columns, data, style, printfunc = ns.print, highlight) {
 	printStack.push('white', style[0][BAR]);
 	for (let c = 0; c < columns.length; c++) {
 		if (data[c].style != undefined)
-			printStack.push({ style: data[c].style }, data[c].text.padEnd(columns[c].width));
+			printStack.push({ style: data[c].style }, alignText(data[c].text, columns[c].width, columns[c].pad));
 		else if (data[c].color != undefined)
-			printStack.push(CreateStyle(data[c].color, highlight), data[c].text.padEnd(columns[c].width));
+			printStack.push(CreateStyle(data[c].color, highlight), alignText(data[c].text, columns[c].width, columns[c].pad));
 		else
-			printStack.push(CreateStyle('white', highlight), data[c].toString().padEnd(columns[c].width));
+			printStack.push(CreateStyle('white', highlight), alignText(data[c].toString(), columns[c].width, columns[c].pad));
 		printStack.push('white', style[0][BAR]);
 	}
 
 	PrintStack(ns, printStack, printfunc);
+}
+
+function alignText(text, totalLength, pad = -1) {
+	if (pad < 0) {
+		return text.padEnd(totalLength);
+	} else if (pad > 0) {
+		return text.padStart(totalLength);
+	} else {
+		const padding = totalLength - text.length;
+		const padStartLength = Math.floor(padding / 2);
+		return text.padStart(text.length + padStartLength).padEnd(totalLength);
+	}
 }
 
 export function CreateStyle(color, highlight) {

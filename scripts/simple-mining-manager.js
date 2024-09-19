@@ -1,69 +1,60 @@
 import { MINING_MANAGER_PORT } from "scripts/constants";
 import { getMiningTarget, getUnlockedServers } from "scripts/storage";
-import { formatRAM, tprintSeparator, openExistingIfAlreadyRunning } from "scripts/utils";
+import { formatRAM, openExistingIfAlreadyRunning, tprintLines } from "scripts/utils";
 
+const HOME_SERVER_RAM_RESERVE = 200;
 const MINER_SCRIPT = "/scripts/remote/miner.js";
-// const MINER_SCRIPT_RAM_USAGE;
+var MINER_SCRIPT_RAM_USAGE;
+var MINING_TARGET;
 
 export function autocomplete(data, args) {
 	return [...data.servers];
 }
 
-// Have global script variables, so other instance can print report.
-// Also make sure that other instance can't start managing.
-// Save log, have log argument to see what happened.
+// TODO: Save log, have log argument to see what happened.
 
-/** @param {NS} ns */
+/**
+ * Deploys miner script to all available servers ensuring full RAM use.
+ *
+ * At start ensures that `MINER_SCRIPT` is running on all unlocked servers optimally(same script, same target, all RAM in use),
+ * if needed kills and restarts scripts.
+ * Then runs in background waiting for notifications about changes and ensures that all RAM is in use by `MINER_SCRIPT`.
+ *
+ * @param {NS} ns
+ **/
 export async function main(ns) {
-	ns.disableLog("sleep");
-	let [miningTarget] = ns.args;
-
-	if (!miningTarget) miningTarget = getMiningTarget(ns);
-	if (!miningTarget) {
-		ns.tprintf("FAILED: Failed to get Target nor was it provided.");
-		return;
-	}
-
-	const availableServers = getUnlockedServers(ns); // TODO: maybe it should get it from find-servers.js script.
-	if (!availableServers || availableServers.length == 0 || !availableServers[0]) {
-		ns.tprintf("FAILED: No servers available.");
-		return;
-	}
-
 	openExistingIfAlreadyRunning(ns);
+	ns.disableLog("sleep");
+	MINER_SCRIPT_RAM_USAGE = ns.getScriptRam(MINER_SCRIPT);
+	let [argument] = ns.args;
 
-	// INITIALIZATION
+	if (!argument) argument = getMiningTarget(ns);
+	if (!argument) {
+		ns.tprintf("FAILED: Failed to get target server nor was it provided.");
+		return;
+	}
+	MINING_TARGET = argument;
 
-	const scriptRamUsage = ns.getScriptRam(MINER_SCRIPT);
-
-	tprintSeparator(ns, "=");
-	ns.tprintf(`Mining manager starting(target: [${miningTarget}])...`);
-	ns.tprintf(`Using: ${MINER_SCRIPT} (${formatRAM(scriptRamUsage, 2)}).`);
-	ns.tprintf(`Found ${availableServers.length} servers.`);
-
+	const availableServers = getUnlockedServers(ns).filter((s) => ns.getServerMaxRam(s) > 0);
 	for (const server of availableServers) {
-		if (server == "home") continue; // TODO: implement. Also specify how much RAM of "home" it can manage.
-
-		if (ns.getServerMaxRam(server) == 0) continue;
-		if (isRunningOptimally(ns, MINER_SCRIPT, server, miningTarget)) continue;
-
-		deployAndStart(ns, MINER_SCRIPT, server, miningTarget);
+		if (!isMinerScriptRunningOptimally(ns, server)) deployAndStartMiningScript(ns, server);
 	}
 
-	ns.tprintf(`Mining manager successfully started.`);
-	tprintSeparator(ns, "=");
-
-	// INFINITE LOOP
+	tprintLines(ns,
+		`Mining manager starting(target: [${MINING_TARGET}])...`,
+		`Using: ${MINER_SCRIPT} (${formatRAM(MINER_SCRIPT_RAM_USAGE, 2)}).`,
+		`Found ${availableServers.length} servers.`,
+		`Mining manager successfully started.`
+	);
 
 	ns.clearPort(MINING_MANAGER_PORT);
 	while (true) {
 		const server = ns.readPort(MINING_MANAGER_PORT);
-
 		if (server != "NULL PORT DATA") {
 			if (ns.getServerMaxRam(server) == 0) continue;
-			if (isRunningOptimally(ns, MINER_SCRIPT, server, miningTarget)) continue;
+			if (isMinerScriptRunningOptimally(ns, server)) continue;
 
-			deployAndStart(ns, MINER_SCRIPT, server, miningTarget);
+			deployAndStartMiningScript(ns, server);
 		}
 
 		await ns.sleep(200);
@@ -71,19 +62,36 @@ export async function main(ns) {
 }
 
 /** @param {NS} ns */
-function deployAndStart(ns, script, server, miningTarget) {
-	ns.killall(server); // TODO: check if success.
-	ns.scp(script, server); // TODO: check if success.
-	const threadsCount = Math.floor(ns.getServerMaxRam(server) / ns.getScriptRam(script));
+function deployAndStartMiningScript(ns, server) {
+	if (ns.isRunning(MINER_SCRIPT, server, MINING_TARGET) && !ns.kill(MINER_SCRIPT, server, MINING_TARGET)) {
+		ns.printf(`FAILED: Failed to kill script on [${server}] server.`); // LOG
+		return;
+	}
+
+	if (server != "home" && !ns.scp(MINER_SCRIPT, server)) {
+		ns.printf(`FAILED: Failed to deploy script to [${server}] server.`); // LOG
+		return;
+	}
+	
+	const serverMaxRam = getServerMaxRam(ns, server);
+	const threadsCount = Math.floor(serverMaxRam / MINER_SCRIPT_RAM_USAGE);
+
 	if (threadsCount == 0) return;
-	ns.exec(script, server, threadsCount, miningTarget); // TODO: check if success.
+
+	if (!ns.exec(MINER_SCRIPT, server, threadsCount, MINING_TARGET)) {
+		ns.printf(`FAILED: Failed to start script on [${server}] server.`); // LOG
+	}
+	ns.printf(`Successfully deployed and started mining script on [${server}] server.`); // LOG
 }
 
 /** @param {NS} ns */
-function isRunningOptimally(ns, script, server, miningTarget) {
-	return ns.scriptRunning(script, server)
-		&& ns.getRunningScript(script, server, miningTarget)
-		&& (ns.getServerMaxRam(server) - ns.getServerUsedRam(server) < ns.getScriptRam(script));
+function isMinerScriptRunningOptimally(ns, server) {
+	return ns.getRunningScript(MINER_SCRIPT, server, MINING_TARGET)
+		&& getServerMaxRam(ns, server) - ns.getServerUsedRam(server) < MINER_SCRIPT_RAM_USAGE;
+}
+
+function getServerMaxRam(ns, server) {
+	return server == "home" ? Math.max(ns.getServerMaxRam(server) - HOME_SERVER_RAM_RESERVE, 0) : ns.getServerMaxRam(server);
 }
 
 /**

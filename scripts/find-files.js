@@ -31,8 +31,8 @@ export async function main(ns) {
  * 
  * @param {NS} ns Netscript instance.
  * @param {string} fileSubstring Part of filename.
- * @returns {Object[]} List of found files throughtout whole network.
+ * @returns {Object[]} List of found files throughtout whole network. Format: { hostname, file }
 */
-function findFiles(ns, fileSubstring) {
+export function findFiles(ns, fileSubstring) {
 	return findAllServers(ns).flatMap(s => ns.ls(s, fileSubstring).map(f => ({ hostname: s, file: f })));
 }

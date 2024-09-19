@@ -37,12 +37,12 @@ export async function main(ns) {
 /** 
  * Recursively finds a path from the given hostname to "home".
  * 
- * @param {NS} ns
- * @param {string} hostname The starting node (current server) in the network
- * @param {Set} visited A set of visited nodes to avoid loops
- * @returns {Array<string>} A list of hostnames from the starting node to "home"
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname The starting node.
+ * @param {Set} visited A set of visited nodes to avoid loops.
+ * @returns {Array<string>} A list of hostnames from the starting node to "home".
  */
-function findPathToHome(ns, hostname, visited = new Set()) {
+export function findPathToHome(ns, hostname, visited = new Set()) {
 	visited.add(hostname);
 
 	const connectedHosts = ns.scan(hostname);

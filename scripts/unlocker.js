@@ -1,5 +1,6 @@
-// import { getLockedServers, saveLockedServers, getUnlockedServers, saveUnlockedServers } from "scripts/storage";
+import { getLockedServers, saveLockedServers, getUnlockedServers, saveUnlockedServers } from "scripts/storage";
 import { tprintLines } from "scripts/utils";
+import { PORT_OPENING_PROGRAMS } from "scripts/constants";
 
 export function autocomplete(data, args) {
 	return [...data.servers, "locked"];
@@ -14,43 +15,43 @@ export async function main(ns) {
 		return;
 	}
 
-	if (!ns.serverExists(target)) {
+	if (!ns.serverExists(target) && target != "locked") {
 		ns.tprintf("FAILED: Target doesn't exist.");
 		return;
 	}
 
-	if (target == "locked") {
-		// TODO: implement mass unlocking of "locked" servers.
-		ns.tprintf("FAILED: Not implemented yet.");
-		return;
-	}
-
-	const unlocked = unlock(ns, target);
-
-	// TODO: add backdoor.
-
 	const availableProgramsCount = getAvailablePrograms(ns).length;
 	const unlockFilesDisplay = "[X]".repeat(availableProgramsCount) + "[ ]".repeat(5 - availableProgramsCount);
-	tprintLines(ns, unlockFilesDisplay, `Target: [${target}]`, unlocked ? "Successfully unlocked." : "Failed to gain access");
+
+	if (target == "locked") {
+		const lockedServers = getLockedServers(ns);
+		const unlockedServers = lockedServers.filter((s) => unlock(ns, s));
+		saveLockedServers(ns, lockedServers.filter((s) => !unlockedServers.includes(s)));
+		saveUnlockedServers(ns, [...new Set(getUnlockedServers(ns).concat(unlockedServers))]);
+
+		tprintLines(ns, unlockFilesDisplay, `${unlockedServers.length} out of ${lockedServers.length} were unlocked.`);
+	} else {
+		tprintLines(ns, unlockFilesDisplay, `Target: [${target}]`, unlock(ns, target) ? "Successfully unlocked." : "Failed to gain access.");
+	}
 }
 
 /** 
- * @param {NS} ns 
- * @param {string} target 
+ * @param {NS} ns Netscript instance.
+ * @param {string} server Server to be unlocked.
  * @returns {boolean} TRUE if root access was gained, otherwise FALSE. 
 */
-function unlock(ns, target) {
-	try { ns.brutessh(target); } catch { }
-	try { ns.ftpcrack(target); } catch { }
-	try { ns.relaysmtp(target); } catch { }
-	try { ns.httpworm(target); } catch { }
-	try { ns.sqlinject(target); } catch { }
-	try { ns.nuke(target); } catch { }
+function unlock(ns, server) {
+	try { ns.brutessh(server); } catch { }
+	try { ns.ftpcrack(server); } catch { }
+	try { ns.relaysmtp(server); } catch { }
+	try { ns.httpworm(server); } catch { }
+	try { ns.sqlinject(server); } catch { }
+	try { ns.nuke(server); } catch { }
 
-	return ns.hasRootAccess(target);
+	return ns.hasRootAccess(server);
 }
 
 /** @param {NS} ns */
 function getAvailablePrograms(ns) {
-	return ["SQLInject.exe", "HTTPWorm.exe", "relaySMTP.exe", "FTPCrack.exe", "BruteSSH.exe"].filter(p => ns.fileExists(p));
+	return PORT_OPENING_PROGRAMS.filter(p => ns.fileExists(p));
 }

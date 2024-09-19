@@ -45,13 +45,14 @@ function printServersReport(ns, serversGroup) {
 		.sort((a, b) => b.maxRam - a.maxRam)
 		.map((i) => {
 			const usage = !i.maxRam ? 0 : i.ramUsage / i.maxRam;
-			return [i.hostname, i.rootAccess, formatRAM(i.maxRam), { color: pctColor(usage), text: ns.formatPercent(usage, 0) }];
+			return [i.hostname, i.rootAccess, formatRAM(i.maxRam), { color: pctColor(usage), text: ns.formatPercent(usage, 0) }, i.miningTarget];
 		});
 	const columns = [
 		{ header: "Server", width: Math.max(hostnames.reduce((max, h) => Math.max(max, h.length ?? 0), 0), "Server".length) },
 		{ header: "Root access", width: 11 },
 		{ header: "Ram", width: 7 },
-		{ header: "Usage", width: 7 },
+		{ header: "Usage", width: 5 },
+		{ header: "Mining target", width: 18 },
 	];
 	PrintTable(ns, servers, columns, DefaultStyle(), ColorPrint);
 }
@@ -63,5 +64,6 @@ function getServerInfo(ns, hostname) {
 		rootAccess: ns.hasRootAccess(hostname),
 		maxRam: ns.getServerMaxRam(hostname),
 		ramUsage: ns.getServerUsedRam(hostname),
+		miningTarget: ns.ps(hostname).filter((p) => p.filename.includes("miner")).map((p) => p.args[0]),
 	};
 }

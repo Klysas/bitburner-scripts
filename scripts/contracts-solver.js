@@ -8,8 +8,9 @@ export function autocomplete(data, args) {
 }
 
 const SOLUTIONS = {
-	"Encryption I: Caesar Cipher" : solveCaesarCipher
-}
+	"Array Jumping Game": solveArrayJumpingGame,
+	"Encryption I: Caesar Cipher": solveCaesarCipher,
+};
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -75,4 +76,25 @@ function solveCaesarCipher(ns, hostname, file) {
 		const letterIndex = (alphabet.indexOf(letter) - shiftNumber + alphabetLength) % alphabetLength;
 		return alphabet[letterIndex];
 	}).join("");
+}
+
+/** 
+ * Provides answer to "Array Jumping Game" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveArrayJumpingGame(ns, hostname, file) {
+	const array = ns.codingcontract.getData(file, hostname);
+	const canReachEnd = (startingIndex) => {
+		if (startingIndex + array[startingIndex] >= array.length - 1) return 1;
+
+		const weightArray = array.slice(startingIndex, startingIndex + array[startingIndex]).map((v, i) => v + i);
+		const newIndex = startingIndex + weightArray.lastIndexOf(Math.max(...weightArray));
+		if (startingIndex === newIndex) return 0;
+		return canReachEnd(newIndex);
+	};
+	return canReachEnd(0);
 }

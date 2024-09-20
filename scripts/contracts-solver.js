@@ -1,4 +1,11 @@
 import { findFiles } from "scripts/find-files";
+import { tprintLines } from "scripts/utils";
+
+const COMMANDS = ["description"];
+
+export function autocomplete(data, args) {
+	return COMMANDS;
+}
 
 const SOLUTIONS = {
 	"Encryption I: Caesar Cipher" : solveCaesarCipher
@@ -6,6 +13,21 @@ const SOLUTIONS = {
 
 /** @param {NS} ns */
 export async function main(ns) {
+	const [command, argument] = ns.args;
+
+	if (command && !COMMANDS.includes(command)) {
+		ns.tprintf(`FAILED: Command is not supported. Commands: ${COMMANDS}`);
+		return;
+	}
+
+	if (command) {
+		const returnIndex = argument ?? 0;
+		const contract = findFiles(ns, ".cct")[returnIndex];
+
+		tprintLines(ns, 200, `TYPE: '${ns.codingcontract.getContractType(contract.file, contract.hostname)}'`, "DESCRIPTION:", ns.codingcontract.getDescription(contract.file, contract.hostname));
+		return;
+	}
+
 	for (const contract of findFiles(ns, ".cct")) {
 		if (hasSolutionFor(ns, contract.hostname, contract.file)) {
 			solveContract(ns, contract.hostname, contract.file, ns.tprintf);

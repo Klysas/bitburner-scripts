@@ -85,7 +85,7 @@ export function getUnlockedServers(ns) {
 const AVAILABLE_SERVERS_FILE = "/data/availableServers.txt";
 
 /**
- * Save hostnames of servers with full access to permanent storage.
+ * Save hostnames of all found servers to permanent storage.
  *
  * @param {NS} ns
  * @param {string[]} servers
@@ -95,7 +95,7 @@ export function saveAvailableServers(ns, servers) {
 }
 
 /**
- * Get hostnames of servers with full access from permanent storage.
+ * Get hostnames of all found servers from permanent storage.
  *
  * @param {NS} ns
  * @returns {string[]}

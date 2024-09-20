@@ -63,7 +63,8 @@ export async function main(ns) {
 
 /** @param {NS} ns */
 function deployAndStartMiningScript(ns, server) {
-	if (ns.isRunning(MINER_SCRIPT, server, MINING_TARGET) && !ns.kill(MINER_SCRIPT, server, MINING_TARGET)) {
+	const killedAllInstancesOfMinerScript = findAllRunningScriptInstances(ns, MINER_SCRIPT, server).every((p) => ns.kill(p.pid));
+	if (!killedAllInstancesOfMinerScript) {
 		ns.printf(`FAILED: Failed to kill script on [${server}] server.`); // LOG
 		return;
 	}
@@ -80,6 +81,7 @@ function deployAndStartMiningScript(ns, server) {
 
 	if (!ns.exec(MINER_SCRIPT, server, threadsCount, MINING_TARGET)) {
 		ns.printf(`FAILED: Failed to start script on [${server}] server.`); // LOG
+		return;
 	}
 	ns.printf(`Successfully deployed and started mining script on [${server}] server.`); // LOG
 }
@@ -92,6 +94,17 @@ function isMinerScriptRunningOptimally(ns, server) {
 
 function getServerMaxRam(ns, server) {
 	return server == "home" ? Math.max(ns.getServerMaxRam(server) - HOME_SERVER_RAM_RESERVE, 0) : ns.getServerMaxRam(server);
+}
+
+/** 
+ * @param {NS} ns 
+ * @param {string} scriptName 
+ * @param {string} hostname 
+ * @returns {ProcessInfo[]}
+ * */
+function findAllRunningScriptInstances(ns, scriptName, hostname) {
+	scriptName = scriptName.slice(1); // Removes leading '/'
+	return ns.ps(hostname).filter((p) => p.filename.includes(scriptName));
 }
 
 /**

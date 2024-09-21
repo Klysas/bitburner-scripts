@@ -1,6 +1,7 @@
 import { getLockedServers, saveLockedServers, getUnlockedServers, saveUnlockedServers } from "scripts/storage";
-import { tprintLines } from "scripts/utils";
+import { tprintLines, retry } from "scripts/utils";
 import { PORT_OPENING_PROGRAMS } from "scripts/constants";
+import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
 
 export function autocomplete(data, args) {
 	return [...data.servers, "locked"];
@@ -28,10 +29,13 @@ export async function main(ns) {
 		const unlockedServers = lockedServers.filter((s) => unlock(ns, s));
 		saveLockedServers(ns, lockedServers.filter((s) => !unlockedServers.includes(s)));
 		saveUnlockedServers(ns, [...new Set(getUnlockedServers(ns).concat(unlockedServers))]);
+		unlockedServers.forEach((s) => retry(ns, 500, 6, () => notifyServerAddedOrModified(ns, s)));
 
 		tprintLines(ns, unlockFilesDisplay, `${unlockedServers.length} out of ${lockedServers.length} were unlocked.`);
 	} else {
-		tprintLines(ns, unlockFilesDisplay, `Target: [${target}]`, unlock(ns, target) ? "Successfully unlocked." : "Failed to gain access.");
+		const success = unlock(ns, target);
+		tprintLines(ns, unlockFilesDisplay, `Target: [${target}]`, success ? "Successfully unlocked." : "Failed to gain access.");
+		if (success) await retry(ns, 500, 6, () => notifyServerAddedOrModified(ns, target));
 	}
 }
 

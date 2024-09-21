@@ -7,7 +7,7 @@ export async function main(ns) {
 	ns.disableLog("ALL");
 
 	const myHackingLevel = ns.getHackingLevel();
-	const hostnames = getUnlockedServers(ns);
+	const hostnames = getUnlockedServers(ns).filter(s => s != "home");
 	const savedMiningTarget = getMiningTarget(ns);
 
 	let potentialServers = [];

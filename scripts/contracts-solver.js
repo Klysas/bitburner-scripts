@@ -8,6 +8,7 @@ export function autocomplete(data, args) {
 }
 
 const SOLUTIONS = {
+	"Algorithmic Stock Trader II": solveStockTrader2,
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
 };
@@ -97,4 +98,36 @@ function solveArrayJumpingGame(ns, hostname, file) {
 		return canReachEnd(newIndex);
 	};
 	return canReachEnd(0);
+}
+
+/** 
+ * Provides answer to "Algorithmic Stock Trader II" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveStockTrader2(ns, hostname, file) {
+	const array = ns.codingcontract.getData(file, hostname);
+	let profit = 0;
+	let buyPrice = NaN;
+
+	for (let i = 1; i < array.length; i++) {
+		if (array[i - 1] === array[i]) continue;
+
+		// BUY
+		if (array[i - 1] < array[i] && isNaN(buyPrice)) {
+			buyPrice = array[i - 1];
+		}
+
+		// SELL
+		if (array[i - 1] > array[i] && !isNaN(buyPrice)) {
+			profit += array[i - 1] - buyPrice;
+			buyPrice = NaN;
+		}
+	}
+	if (!isNaN(buyPrice)) profit += array[array.length - 1] - buyPrice;
+
+	return profit;
 }

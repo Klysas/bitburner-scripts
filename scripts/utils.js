@@ -117,7 +117,7 @@ export function tprintLines(ns, ...args) {
  * @returns {string} formatted money value with symbol e.g. $10.05K.
  **/
 export function formatMoney(amount, displayPrefix = true) {
-	let output = amount.toString();
+	let output = amount.toFixed(2).toString();
 	const units = [
 		{ value: 1e15, symbol: "Q" }, // Quadrillions
 		{ value: 1e12, symbol: "T" }, // Trillions

@@ -11,5 +11,6 @@ export async function main(ns) {
 
 	for (const script of scripts) {
 		ns.run(script.file, 1, ...script.args);
+		await ns.sleep(200);
 	}
 }

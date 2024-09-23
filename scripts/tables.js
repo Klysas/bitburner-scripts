@@ -44,11 +44,17 @@ export async function main(ns) {
 	// width 	 : Width of the column content
 	// pad   	 : 0 for center, < 0 for left, > 0 for right
 	// padHeader : 0 for center, < 0 for left, > 0 for right
-	const columns = [
+	let columns = [
 		{ header: 'Servers', width: 40 },
 		{ header: 'Ram', width: 13 },
 		{ header: 'Money', width: 20 }
 	];
+	PrintTable(ns, data, columns, DefaultStyle(), ColorPrint);
+
+	columns = [{ header: "Precentage", width: 12 }];
+	data = [1, 0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0].map((n) => [
+		{ color: pctColor(n), text: n }
+	]);
 	PrintTable(ns, data, columns, DefaultStyle(), ColorPrint);
 }
 
@@ -126,9 +132,9 @@ function PrintLine(ns, columns, data, style, printfunc = ns.print, highlight) {
 	printStack.push('white', style[0][BAR]);
 	for (let c = 0; c < columns.length; c++) {
 		if (data[c].style != undefined)
-			printStack.push({ style: data[c].style }, alignText(data[c].text, columns[c].width, columns[c].pad));
+			printStack.push({ style: data[c].style }, alignText(data[c].text.toString(), columns[c].width, columns[c].pad));
 		else if (data[c].color != undefined)
-			printStack.push(CreateStyle(data[c].color, highlight), alignText(data[c].text, columns[c].width, columns[c].pad));
+			printStack.push(CreateStyle(data[c].color, highlight), alignText(data[c].text.toString(), columns[c].width, columns[c].pad));
 		else
 			printStack.push(CreateStyle('white', highlight), alignText(data[c].toString(), columns[c].width, columns[c].pad));
 		printStack.push('white', style[0][BAR]);
@@ -166,12 +172,12 @@ function PrintStack(ns, printStack, printfunc) {
 
 // Selects a color based on a 1-based percentage
 export function pctColor(pct) {
-	if (pct >= 1) return 'Lime';
-	else if (pct >= 0.9) return 'Green';
-	else if (pct >= 0.75) return 'DarkGreen';
-	else if (pct >= 0.6) return 'GreenYellow';
+	if (pct >= 1) return 'Green';
+	else if (pct >= 0.9) return 'GreenYellow';
+	else if (pct >= 0.75) return 'Lime';
+	else if (pct >= 0.6) return 'DarkGreen';
 	else if (pct >= 0.3) return 'Yellow';
-	else if (pct != 0) return 'DarkOrange';
+	else if (pct > 0) return 'DarkOrange';
 	return 'Red';
 }
 

@@ -9,6 +9,7 @@ export function autocomplete(data, args) {
 
 const SOLUTIONS = {
 	"Algorithmic Stock Trader II": solveStockTrader2,
+	"Algorithmic Stock Trader IV": solveStockTrader4,
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
@@ -59,6 +60,25 @@ function solveContract(ns, hostname, file, print) {
 function hasSolutionFor(ns, hostname, file) {
 	return Object.keys(SOLUTIONS).includes(ns.codingcontract.getContractType(file, hostname));
 }
+
+/**
+ * Calculates maximum possible profit from given stock prices.
+ * 
+ * @param {Array<number>} prices Array of stock prices of each day.
+ * @returns {number} Maximum profit.
+ */
+function calculateMaximumProfit(prices) {
+	let profit = 0;
+
+	for (let i = 1; i < prices.length; i++) {
+		profit += Math.max(prices[i] - prices[i - 1], 0);
+	}
+	return profit;
+}
+
+//========================================================
+//	SOLUTIONS
+//========================================================
 
 /** 
  * Provides answer to "Encryption I: Caesar Cipher" type contract.
@@ -111,26 +131,36 @@ function solveArrayJumpingGame(ns, hostname, file) {
 */
 function solveStockTrader2(ns, hostname, file) {
 	const array = ns.codingcontract.getData(file, hostname);
-	let profit = 0;
-	let buyPrice = NaN;
 
-	for (let i = 1; i < array.length; i++) {
-		if (array[i - 1] === array[i]) continue;
+	return calculateMaximumProfit(array);
+}
 
-		// BUY
-		if (array[i - 1] < array[i] && isNaN(buyPrice)) {
-			buyPrice = array[i - 1];
-		}
+/** 
+ * Provides answer to "Algorithmic Stock Trader IV" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveStockTrader4(ns, hostname, file) {
+	const [maxTransactionsCount, prices] = ns.codingcontract.getData(file, hostname);
+	const pricesCount = prices.length;
 
-		// SELL
-		if (array[i - 1] > array[i] && !isNaN(buyPrice)) {
-			profit += array[i - 1] - buyPrice;
-			buyPrice = NaN;
+	if (pricesCount === 0 || maxTransactionsCount === 0) return 0;
+
+	if (maxTransactionsCount >= Math.floor(pricesCount / 2)) return calculateMaximumProfit(array);
+
+	const dp = Array.from({ length: maxTransactionsCount + 1 }, () => Array(pricesCount).fill(0));
+
+	for (let i = 1; i <= maxTransactionsCount; i++) {
+		let maxDiff = -prices[0];
+		for (let j = 1; j < pricesCount; j++) {
+			dp[i][j] = Math.max(dp[i][j - 1], prices[j] + maxDiff);
+			maxDiff = Math.max(maxDiff, dp[i - 1][j] - prices[j]);
 		}
 	}
-	if (!isNaN(buyPrice)) profit += array[array.length - 1] - buyPrice;
-
-	return profit;
+	return dp[maxTransactionsCount][pricesCount - 1];
 }
 
 /** 

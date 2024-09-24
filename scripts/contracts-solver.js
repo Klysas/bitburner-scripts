@@ -92,7 +92,7 @@ function solveArrayJumpingGame(ns, hostname, file) {
 	const canReachEnd = (startingIndex) => {
 		if (startingIndex + array[startingIndex] >= array.length - 1) return 1;
 
-		const weightArray = array.slice(startingIndex, startingIndex + array[startingIndex]).map((v, i) => v + i);
+		const weightArray = array.slice(startingIndex, startingIndex + array[startingIndex] + 1).map((v, i) => v + i);
 		const newIndex = startingIndex + weightArray.lastIndexOf(Math.max(...weightArray));
 		if (startingIndex === newIndex) return 0;
 		return canReachEnd(newIndex);

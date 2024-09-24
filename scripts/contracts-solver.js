@@ -11,6 +11,7 @@ const SOLUTIONS = {
 	"Algorithmic Stock Trader II": solveStockTrader2,
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
+	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 };
 
 /** @param {NS} ns */
@@ -130,4 +131,25 @@ function solveStockTrader2(ns, hostname, file) {
 	if (!isNaN(buyPrice)) profit += array[array.length - 1] - buyPrice;
 
 	return profit;
+}
+
+/** 
+ * Provides answer to "Subarray with Maximum Sum" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveSubarrayWithMaximumSum(ns, hostname, file) {
+	const array = ns.codingcontract.getData(file, hostname);
+	let sum = 0;
+
+	for (let i = 0; i < array.length; i++) {
+		for (let j = i; j < array.length; j++) {
+			const newSum = array.slice(i, j + 1).reduce((partialSum, a) => partialSum + a, 0);
+			sum = newSum > sum ? newSum : sum;
+		}
+	}
+	return sum;
 }

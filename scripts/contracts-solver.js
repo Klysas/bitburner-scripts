@@ -9,6 +9,7 @@ export function autocomplete(data, args) {
 
 const SOLUTIONS = {
 	"Algorithmic Stock Trader II": solveStockTrader2,
+	"Algorithmic Stock Trader III": solveStockTrader3,
 	"Algorithmic Stock Trader IV": solveStockTrader4,
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Array Jumping Game II": solveArrayJumpingGame2,
@@ -77,6 +78,32 @@ function calculateMaximumProfit(prices) {
 		profit += Math.max(prices[i] - prices[i - 1], 0);
 	}
 	return profit;
+}
+
+/**
+ * Calculates maximum possible profit from given stock prices and limited amount of transactions.
+ * 
+ * @param {Array<number>} prices Array of stock prices of each day.
+ * @param {number} maxTransactionsCount Maximum amount of buy+sell orders.
+ * @returns {number} Maximum profit.
+ */
+function calculateMaximumProfitWithLimitedTransactions(prices, maxTransactionsCount) {
+	const pricesCount = prices.length;
+
+	if (pricesCount === 0 || maxTransactionsCount === 0) return 0;
+
+	if (maxTransactionsCount >= Math.floor(pricesCount / 2)) return calculateMaximumProfit(prices);
+
+	const dp = Array.from({ length: maxTransactionsCount + 1 }, () => Array(pricesCount).fill(0));
+
+	for (let i = 1; i <= maxTransactionsCount; i++) {
+		let maxDiff = -prices[0];
+		for (let j = 1; j < pricesCount; j++) {
+			dp[i][j] = Math.max(dp[i][j - 1], prices[j] + maxDiff);
+			maxDiff = Math.max(maxDiff, dp[i - 1][j] - prices[j]);
+		}
+	}
+	return dp[maxTransactionsCount][pricesCount - 1];
 }
 
 //========================================================
@@ -162,6 +189,20 @@ function solveStockTrader2(ns, hostname, file) {
 }
 
 /** 
+ * Provides answer to "Algorithmic Stock Trader III" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveStockTrader3(ns, hostname, file) {
+	const array = ns.codingcontract.getData(file, hostname);
+
+	return calculateMaximumProfitWithLimitedTransactions(array, 2);
+}
+
+/** 
  * Provides answer to "Algorithmic Stock Trader IV" type contract.
  * 
  * @param {NS} ns Netscript instance.
@@ -171,22 +212,8 @@ function solveStockTrader2(ns, hostname, file) {
 */
 function solveStockTrader4(ns, hostname, file) {
 	const [maxTransactionsCount, prices] = ns.codingcontract.getData(file, hostname);
-	const pricesCount = prices.length;
 
-	if (pricesCount === 0 || maxTransactionsCount === 0) return 0;
-
-	if (maxTransactionsCount >= Math.floor(pricesCount / 2)) return calculateMaximumProfit(array);
-
-	const dp = Array.from({ length: maxTransactionsCount + 1 }, () => Array(pricesCount).fill(0));
-
-	for (let i = 1; i <= maxTransactionsCount; i++) {
-		let maxDiff = -prices[0];
-		for (let j = 1; j < pricesCount; j++) {
-			dp[i][j] = Math.max(dp[i][j - 1], prices[j] + maxDiff);
-			maxDiff = Math.max(maxDiff, dp[i - 1][j] - prices[j]);
-		}
-	}
-	return dp[maxTransactionsCount][pricesCount - 1];
+	return calculateMaximumProfitWithLimitedTransactions(prices, maxTransactionsCount);
 }
 
 /** 

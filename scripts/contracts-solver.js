@@ -11,6 +11,7 @@ const SOLUTIONS = {
 	"Algorithmic Stock Trader II": solveStockTrader2,
 	"Algorithmic Stock Trader IV": solveStockTrader4,
 	"Array Jumping Game": solveArrayJumpingGame,
+	"Array Jumping Game II": solveArrayJumpingGame2,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
@@ -121,6 +122,29 @@ function solveArrayJumpingGame(ns, hostname, file) {
 		return canReachEnd(newIndex);
 	};
 	return canReachEnd(0);
+}
+
+/** 
+ * Provides answer to "Array Jumping Game II" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveArrayJumpingGame2(ns, hostname, file) {
+	const array = ns.codingcontract.getData(file, hostname);
+	const weightArray = array.map((v, i) => v + i);
+	let jumps = 0;
+	let weight = weightArray[0];
+
+	do {
+		if (!array[weight]) return 0;
+		weight = Math.max(...weightArray.slice(0, weight + 1));
+		jumps++;
+	} while (weight < weightArray.length);
+
+	return jumps + 1;
 }
 
 /** 

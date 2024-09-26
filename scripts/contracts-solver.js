@@ -12,6 +12,7 @@ const SOLUTIONS = {
 	"Algorithmic Stock Trader IV": solveStockTrader4,
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
+	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
 };
@@ -203,4 +204,37 @@ function solveTotalWaysToSum(ns, hostname, file) {
 			table[j] += table[j - i];
 
 	return table[number];
+}
+
+/** 
+ * Provides answer to "Merge Overlapping Intervals" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveMergeOverlappingIntervals(ns, hostname, file) {
+	const initialIntervals = ns.codingcontract.getData(file, hostname);
+	const merge = (intervals) => {
+		const result = [intervals.shift()];
+
+		for (const interval of intervals) {
+			for (let i = 0; i < result.length; i++) {
+				if (interval[1] < result[i][0]) {
+					result.splice(i, 0, interval);
+					break;
+				} else if (interval[0] <= result[i][1]) {
+					if (interval[0] < result[i][0]) result[i][0] = interval[0];
+					if (interval[1] > result[i][1]) result[i][1] = interval[1];
+					break;
+				}
+				if (i + 1 === result.length) result.push(interval);
+			}
+		}
+
+		return intervals.length + 1 === result.length ? result : merge(result);
+	};
+
+	return merge(initialIntervals);
 }

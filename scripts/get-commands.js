@@ -32,6 +32,7 @@ export async function main(ns) {
 /** @param {NS} ns */
 function getBackdoorCommands(ns) {
 	return ["CSEC", "avmnite-02h", "I.I.I.I", "run4theh111z", "w0r1d_d43m0n"].map((target) => {
+		if (!ns.serverExists(target)) return `[${target}]: NOT FOUND.`;
 		const connectCommands = findPathToHome(ns, target).reverse().filter((s) => s != "home").map((s) => `connect ${s};`).join("");
 		const portOpeningCommands = PORT_OPENING_PROGRAMS.slice(0, ns.getServerNumPortsRequired(target)).map((p) => `run ${p};`).join("");
 		return `[${target}]${

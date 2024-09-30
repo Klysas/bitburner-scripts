@@ -13,7 +13,7 @@ export async function main(ns) {
 	let potentialServers = [];
 	for (let hostname of hostnames) {
 		let serverInfo = getInfo(ns, hostname);
-		if (serverInfo.maximumMoney > 0 && (myHackingLevel / serverInfo.requiredHackingLevel) > 2) {
+		if (serverInfo.maximumMoney > 0 && (myHackingLevel / serverInfo.requiredHackingLevel) >= 2) {
 			potentialServers.push(serverInfo);
 		} else if (myHackingLevel == 1 && serverInfo.requiredHackingLevel == 1) {
 			potentialServers.push(serverInfo);

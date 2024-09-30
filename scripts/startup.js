@@ -5,7 +5,7 @@ export async function main(ns) {
 		{ file: "/scripts/unlocker.js", args: ["locked"] },
 		{ file: "/scripts/find-best-target.js", args: [] },
 		{ file: "/scripts/simple-mining-manager.js", args: [] },
-		{ file: "/scripts/bank.js", args: ["reserve", 0] },
+		{ file: "/scripts/bank.js", args: ["reserve", "200k"] },
 		{ file: "/scripts/hw/purchase-servers.js", args: [8] },
 	];
 

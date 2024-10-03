@@ -93,7 +93,7 @@ export function tprintSeparator(ns, symbol, length = 50) {
  **/
 export function tprintLines(ns, ...args) {
 	if (typeof args[0] === 'number') {
-		var length = args[0] == 0 ? Math.max(...args.map((a) => a.length ?? 0)) : args[0];
+		var length = args[0] || Math.max(...args.map(a => a?.length || 0));
 		var lines = args.slice(1);
 	} else {
 		length = 50; // Default

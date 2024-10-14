@@ -1,4 +1,4 @@
-const COMMANDS = ["buy"];
+const COMMANDS = ["buy", "ascend"];
 
 export function autocomplete(data, args) {
 	return COMMANDS;
@@ -34,6 +34,15 @@ export async function main(ns) {
 					ns.tprintf(`Successfully purchased '${argument}' for ${member}`);
 				else 
 					ns.tprintf(`Failed to purchase '${argument}' for ${member}`);
+			}
+			break;
+		}
+		case "ascend": {
+			for (const member of ns.gang.getMemberNames()) {
+				if (ns.gang.ascendMember(member)) 
+					ns.tprintf(`Successfully ascended ${member}.`);
+				else 
+					ns.tprintf(`Failed to ascend ${member}.`);
 			}
 			break;
 		}

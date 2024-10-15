@@ -1,6 +1,7 @@
 /** @param {NS} ns */
 export async function main(ns) {
 	const scripts = [
+		{ file: "/scripts/storage.js", args: ["clear"] },
 		{ file: "/scripts/find-servers.js", args: ["refresh"] },
 		{ file: "/scripts/unlocker.js", args: ["locked"] },
 		{ file: "/scripts/find-best-target.js", args: [] },

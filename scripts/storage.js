@@ -1,4 +1,46 @@
 import { NEW_LINE } from "scripts/constants";
+import { tprintLines } from "scripts/utils";
+
+const COMMANDS = ["clear"];
+
+export function autocomplete(data, args) {
+	return COMMANDS;
+}
+
+/** @param {NS} ns */
+export async function main(ns) {
+	const [command] = ns.args;
+
+	if (!command) {
+		ns.tprintf(`FAILED: Command is required. Commands: ${COMMANDS}`);
+		return;
+	}
+
+	if (command && !COMMANDS.includes(command)) {
+		ns.tprintf(`FAILED: Command is not supported. Commands: ${COMMANDS}`);
+		return;
+	}
+
+	switch (command) {
+		case "clear": {
+			const message = clearAllData(ns) ? `Storage cleared.` : `Failed to clear storage.`;
+			tprintLines(ns, message);
+			break;
+		}
+		default:
+			ns.tprintf("FAILED: Not implemented.");
+	}
+}
+
+/** 
+ * Deletes all data from permanent storage.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @returns {boolean} TRUE if success, otherwise - FALSE.
+ **/
+function clearAllData(ns) {
+	return ns.ls("home", "/data/").every((file) => ns.rm(file));
+}
 
 //========================================================
 //	PURCHASED SERVERS

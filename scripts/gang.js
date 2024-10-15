@@ -1,8 +1,10 @@
-const COMMANDS = ["buy", "ascend"];
+const COMMANDS = ["buy", "ascend", "recruit"];
 
 export function autocomplete(data, args) {
 	return COMMANDS;
 }
+
+const NAMES = ["Alex", "Bill", "Charlie", "David", "Evan", "Frank", "Amber", "Bella", "Cherrie", "Dolores", "Eva", "Fiona"];
 
 /** @param {NS} ns */
 export async function main(ns) {
@@ -44,6 +46,18 @@ export async function main(ns) {
 				else 
 					ns.tprintf(`Failed to ascend ${member}.`);
 			}
+			break;
+		}
+		case "recruit": {
+			for (const i = ns.gang.getMemberNames().length; i < NAMES.length; i++) {
+				if (!ns.gang.canRecruitMember()) break;
+
+				if(ns.gang.recruitMember(NAMES[i]))
+					ns.tprintf(`Successfully recruited ${member}.`);
+				else
+					ns.tprintf(`Failed to recruit ${member}.`);
+			}
+			ns.tprintf(`Finished recruiting.`);
 			break;
 		}
 		default:

@@ -52,7 +52,8 @@ export async function main(ns) {
 			for (const i = ns.gang.getMemberNames().length; i < NAMES.length; i++) {
 				if (!ns.gang.canRecruitMember()) break;
 
-				if(ns.gang.recruitMember(NAMES[i]))
+				let member = NAMES[i];
+				if(ns.gang.recruitMember(member))
 					ns.tprintf(`Successfully recruited ${member}.`);
 				else
 					ns.tprintf(`Failed to recruit ${member}.`);

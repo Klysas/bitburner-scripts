@@ -36,7 +36,7 @@ function getBackdoorCommands(ns) {
 		const connectCommands = findPathToHome(ns, target).reverse().filter((s) => s != "home").map((s) => `connect ${s};`).join("");
 		const portOpeningCommands = PORT_OPENING_PROGRAMS.slice(0, ns.getServerNumPortsRequired(target)).map((p) => `run ${p};`).join("");
 		return `[${target}]${
-			ns.getServerRequiredHackingLevel(target) > ns.getPlayer().skills.hacking ? "(NOT YET)" : ""
+			ns.getServer(target).backdoorInstalled ? "(DONE)" :	(ns.getServerRequiredHackingLevel(target) > ns.getPlayer().skills.hacking ? "(NOT YET)" : "")
 		}: connect home;${connectCommands}${portOpeningCommands}run NUKE.exe;backdoor;`;
 	});
 }

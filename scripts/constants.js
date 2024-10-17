@@ -10,7 +10,7 @@ export const PORT_OPENING_PROGRAMS = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP
 //	COLORS
 //========================================================
 
-export const RESET_COLOR = "\u001b[0m";
+export const RESET_COLOR = "\x1b[0m";
 
 export const WARNING_COLOR = "\x1b[33m";
 export const ERROR_COLOR = "\x1b[31m";

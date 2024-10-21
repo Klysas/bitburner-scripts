@@ -49,7 +49,7 @@ export async function main(ns) {
 			break;
 		}
 		case "recruit": {
-			for (const i = ns.gang.getMemberNames().length; i < NAMES.length; i++) {
+			for (let i = ns.gang.getMemberNames().length; i < NAMES.length; i++) {
 				if (!ns.gang.canRecruitMember()) break;
 
 				let member = NAMES[i];

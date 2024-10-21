@@ -1,3 +1,5 @@
+import { tprintLines } from "scripts/utils";
+
 const COMMANDS = ["buy", "ascend", "recruit"];
 
 export function autocomplete(data, args) {
@@ -20,6 +22,7 @@ export async function main(ns) {
 		return;
 	}
 
+	const outputLines = [];
 	switch (command) {
 		case "buy": {
 			if (!argument) {
@@ -33,35 +36,42 @@ export async function main(ns) {
 
 			for (const member of ns.gang.getMemberNames()) {
 				if (ns.gang.purchaseEquipment(member, argument))
-					ns.tprintf(`Successfully purchased '${argument}' for ${member}`);
+					outputLines.push(`Successfully purchased '${argument}' for ${member}`);
 				else 
-					ns.tprintf(`Failed to purchase '${argument}' for ${member}`);
+					outputLines.push(`Failed to purchase '${argument}' for ${member}`);
 			}
+			
+			if (outputLines.length === 0) outputLines.push("There are no gang members.");
 			break;
 		}
 		case "ascend": {
 			for (const member of ns.gang.getMemberNames()) {
 				if (ns.gang.ascendMember(member)) 
-					ns.tprintf(`Successfully ascended ${member}.`);
+					outputLines.push(`Successfully ascended ${member}.`);
 				else 
-					ns.tprintf(`Failed to ascend ${member}.`);
+					outputLines.push(`Failed to ascend ${member}.`);
 			}
+
+			if (outputLines.length === 0) outputLines.push("There are no gang members.");
 			break;
 		}
-		case "recruit": {
+		case "recruit": {		
 			for (let i = ns.gang.getMemberNames().length; i < NAMES.length; i++) {
 				if (!ns.gang.canRecruitMember()) break;
 
 				let member = NAMES[i];
 				if(ns.gang.recruitMember(member))
-					ns.tprintf(`Successfully recruited ${member}.`);
+					outputLines.push(`Successfully recruited ${member}.`);
 				else
-					ns.tprintf(`Failed to recruit ${member}.`);
+					outputLines.push(`Failed to recruit ${member}.`);
 			}
-			ns.tprintf(`Finished recruiting.`);
+
+			if (outputLines.length === 0) outputLines.push("Maximum limit of members is reached.");
 			break;
 		}
 		default:
 			ns.tprintf(`FAILED: Command not implemented.`);
 	}
+
+	if (outputLines.length) tprintLines(ns, ...outputLines);
 }

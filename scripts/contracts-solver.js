@@ -36,29 +36,31 @@ export async function main(ns) {
 		return;
 	}
 
+	const outputLines = [];
 	for (const contract of findFiles(ns, ".cct")) {
 		if (hasSolutionFor(ns, contract.hostname, contract.file)) {
-			solveContract(ns, contract.hostname, contract.file, ns.tprintf);
+			const result = solveContract(ns, contract.hostname, contract.file);
+			outputLines.push(result.reward ? `Success: ${result.reward}` 
+				: `Failed '${contract.file}' on [${contract.hostname}] with '${result.answer}' answer. Remaining attempts: ${ns.codingcontract.getNumTriesRemaining(contract.file, contract.hostname)}`);
 		} else {
-			ns.tprintf(`No solution for '${contract.file}' on [${contract.hostname}] server.`);
+			outputLines.push(`No solution for '${contract.file}'(TYPE: '${ns.codingcontract.getContractType(contract.file, contract.hostname)}') on [${contract.hostname}] server.`);
 		}
 	}
+	tprintLines(ns, ...outputLines);
 }
 
 /** 
- * Provides answer to "Encryption I: Caesar Cipher" type contract.
+ * Attempts to solve provided contract.
  * 
  * @param {NS} ns Netscript instance.
  * @param {string} hostname Server on which contract is present.
  * @param {string} file Contract's file.
- * @param {Function} print Function that accepts string.
- * @returns {boolean} TRUE if success, otherwise FALSE.
+ * @returns {{answer: any, reward: ?string}} Used answer and reward if successful.
 */
-function solveContract(ns, hostname, file, print) {
+function solveContract(ns, hostname, file) {
 	const answer = SOLUTIONS[ns.codingcontract.getContractType(file, hostname)](ns, hostname, file);
 	const reward = ns.codingcontract.attempt(answer, file, hostname);
-	print(reward ? `Success: ${reward}` 
-		: `Failed '${file}' on [${hostname}] with '${answer}' answer. Remaining attempts: ${ns.codingcontract.getNumTriesRemaining(file, hostname)}`);
+	return {answer: answer, reward: reward};
 }
 
 function hasSolutionFor(ns, hostname, file) {

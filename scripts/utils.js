@@ -23,8 +23,8 @@ export async function retry(ns, sleepInMs, attemptsCount, func, successResult = 
  * Checks if there are other instances running of the same script and opens them all instead.
  * 
  * @param {NS} ns
- * @param {number} width (Optional) Width of opened terminal window.
- * @param {number} height (Optional) Height of opened terminal window.
+ * @param {number=} width (Optional) Width of opened terminal window.
+ * @param {number=} height (Optional) Height of opened terminal window.
  **/
 export function openExistingIfAlreadyRunning(ns, width, height) {
 	const currentScriptName = ns.getScriptName();
@@ -59,7 +59,7 @@ export function getCurrentTimeInFormat() {
 
 /**
  * @param {number} precentageFilled Precentage of loading bar that is filled.
- * @param {number=} length Optional. Length of loading bar. Default 20.
+ * @param {number=} length (Optional) Length of loading bar. Default 20.
  * @returns {string} loading bar with spcified precentage filled.
  **/
 export function getLoadingBar(precentageFilled, length = 20) {
@@ -172,7 +172,7 @@ export function parseFormattedMoney(formattedMoney) {
 
 /**
  * @param {number} gigabytes
- * @param {number} numberOfFractionDigits
+ * @param {number=} numberOfFractionDigits (Optional) Default 0.
  * @returns {string} formatted ram value with symbol e.g. 4 GB.
  **/
 export function formatRAM(gigabytes, numberOfFractionDigits = 0) {

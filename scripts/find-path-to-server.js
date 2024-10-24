@@ -13,25 +13,21 @@ export async function main(ns) {
 		return;
 	}
 
-	const nodes = findPathToHome(ns, targetHostname).reverse();
+	const nodes = findPathToHome(ns, targetHostname).reverse().slice(1);
 
 	let path = "";
 	let connectCommand = "";
 	for (const node of nodes) {
 		path += `[${node}]${node == targetHostname ? "" : " => "}`;
-
-		if (node == "home") continue;
 		connectCommand += `connect ${node};`
 	}
 
 	let connected = false;
 	if (command !== undefined && command == "connect") {
-		connected = true; // TODO: requires Singularity.
+		connected = nodes.every((node) => ns.singularity.connect(node));
 	}
 
-	const lines = [`Path: ${path}`, '', connectCommand];
-	if (connected) lines.push("Connected.");
-	tprintLines(ns, 0, ...lines);
+	tprintLines(ns, 0, `Path: ${path}`, "", connected ? "Connected." : connectCommand);
 }
 
 /** 

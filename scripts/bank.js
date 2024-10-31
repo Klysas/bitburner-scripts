@@ -1,5 +1,6 @@
 import { formatMoney, parseFormattedMoney, tprintLines, colorMoney } from "scripts/utils";
 import { getMoneyReserve, saveMoneyReserve } from "scripts/storage";
+import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = ["reserve", "available", "spendable"];
 
@@ -16,10 +17,7 @@ export async function main(ns) {
 		return;
 	}
 
-	if (!COMMANDS.includes(command)) {
-		ns.tprintf("FAILED: Correct command is required! Commands: " + COMMANDS);
-		return;
-	}
+	exitOnInvalidCommand(ns, command, COMMANDS);
 
 	switch (command) {
 		case "reserve": {

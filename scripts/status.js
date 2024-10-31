@@ -1,6 +1,7 @@
 import { formatRAM } from "scripts/utils";
 import { PrintTable, DefaultStyle, ColorPrint, pctColor } from "scripts/tables";
 import { findAllServers } from "scripts/find-servers";
+import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = {
 	servers: ["all", "purchased"],
@@ -14,15 +15,7 @@ export function autocomplete(data, args) {
 export async function main(ns) {
 	const [command, argument] = ns.args;
 
-	if (command === undefined) {
-		ns.tprintf("FAILED: Command is required. Commands: " + Object.keys(COMMANDS));
-		return;
-	}
-
-	if (!Object.keys(COMMANDS).includes(command)) {
-		ns.tprintf("FAILED: Correct command is required! Commands: " + Object.keys(COMMANDS));
-		return;
-	}
+	exitOnInvalidCommand(ns, command, Object.keys(COMMANDS));
 
 	switch (command) {
 		case "servers": printServersReport(ns, argument); break;

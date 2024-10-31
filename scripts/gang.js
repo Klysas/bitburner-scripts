@@ -1,4 +1,5 @@
 import { tprintLines } from "scripts/utils";
+import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = ["buy", "ascend", "recruit"];
 
@@ -12,15 +13,7 @@ const NAMES = ["Alex", "Bill", "Charlie", "David", "Evan", "Frank", "Amber", "Be
 export async function main(ns) {
 	const [command, argument] = ns.args;
 
-	if (!command) {
-		ns.tprintf(`FAILED: Command is required. Commands: ${COMMANDS}`);
-		return;
-	}
-
-	if (command && !COMMANDS.includes(command)) {
-		ns.tprintf(`FAILED: Command is not supported. Commands: ${COMMANDS}`);
-		return;
-	}
+	exitOnInvalidCommand(ns, command, COMMANDS);
 
 	const outputLines = [];
 	switch (command) {

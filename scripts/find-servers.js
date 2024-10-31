@@ -1,6 +1,7 @@
 import { saveAvailableServers, getAvailableServers, saveUnlockedServers, getUnlockedServers, 
 		saveLockedServers, getLockedServers, savePurchasedServers, getPurchasedServers } from "scripts/storage";
 import { tprintLines } from "scripts/utils";
+import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = ["all", "purchased", "unlocked", "locked", "refresh"];
 
@@ -28,10 +29,7 @@ export async function main(ns) {
 		return;
 	}
 
-	if (!COMMANDS.includes(command)) {
-		ns.tprintf(`FAILED: Command is not supported. Commands: ${COMMANDS}`);
-		return;
-	}
+	exitOnInvalidCommand(ns, command, COMMANDS);
 
 	let statuses = [];
 

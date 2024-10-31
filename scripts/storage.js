@@ -1,5 +1,6 @@
 import { NEW_LINE } from "scripts/constants";
 import { tprintLines } from "scripts/utils";
+import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = ["clear"];
 
@@ -11,15 +12,7 @@ export function autocomplete(data, args) {
 export async function main(ns) {
 	const [command] = ns.args;
 
-	if (!command) {
-		ns.tprintf(`FAILED: Command is required. Commands: ${COMMANDS}`);
-		return;
-	}
-
-	if (command && !COMMANDS.includes(command)) {
-		ns.tprintf(`FAILED: Command is not supported. Commands: ${COMMANDS}`);
-		return;
-	}
+	exitOnInvalidCommand(ns, command, COMMANDS);
 
 	switch (command) {
 		case "clear": {

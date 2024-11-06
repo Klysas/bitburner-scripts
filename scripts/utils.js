@@ -50,7 +50,7 @@ export function openExistingIfAlreadyRunning(ns, width, height) {
 }
 
 /**
- * @returns {string} current time in format.
+ * @returns {string} Current time in format.
  **/
 export function getCurrentTimeInFormat() {
 	const now = new Date();
@@ -60,7 +60,7 @@ export function getCurrentTimeInFormat() {
 /**
  * @param {number} precentageFilled Precentage of loading bar that is filled.
  * @param {number=} length (Optional) Length of loading bar. Default 20.
- * @returns {string} loading bar with spcified precentage filled.
+ * @returns {string} Loading bar with spcified precentage filled.
  **/
 export function getLoadingBar(precentageFilled, length = 20) {
 	const filledLength = Math.round((precentageFilled / 100) * length);
@@ -112,18 +112,18 @@ export function tprintLines(ns, ...args) {
 //========================================================
 
 /**
- * @param {number} amount money.
+ * @param {number} amount Amount of money.
  * @param {boolean=} displayPrefix (Optional) TRUE to return with money symbol. Default TRUE.
- * @returns {string} formatted money value with symbol e.g. $10.05K.
+ * @returns {string} Formatted money value with symbol e.g. $10.05K.
  **/
 export function formatMoney(amount, displayPrefix = true) {
 	let output = amount.toFixed(2).toString();
 	const units = [
 		{ value: 1e15, symbol: "Q" }, // Quadrillions
 		{ value: 1e12, symbol: "T" }, // Trillions
-		{ value: 1e9, symbol: "B" }, // Billions
-		{ value: 1e6, symbol: "M" }, // Millions
-		{ value: 1e3, symbol: "K" }, // Thousands
+		{ value: 1e9, symbol: "B" },  // Billions
+		{ value: 1e6, symbol: "M" },  // Millions
+		{ value: 1e3, symbol: "K" },  // Thousands
 	]; // TODO: export and single array.
 
 	for (let i = 0; i < units.length; i++) {
@@ -141,19 +141,19 @@ export function formatMoney(amount, displayPrefix = true) {
 }
 
 /**
- * @param {string} formattedMoney amount of money with symbol e.g. 10M.
- * @returns {number} amount of money without symbol e.g. 10000000.
+ * @param {string} formattedMoney Amount of money with symbol e.g. 10M.
+ * @returns {number} Amount of money without symbol e.g. 10000000.
  **/
 export function parseFormattedMoney(formattedMoney) {
 	const units = {
-		K: 1e3, // Thousands
-		M: 1e6, // Millions
-		B: 1e9, // Billions
+		K: 1e3,  // Thousands
+		M: 1e6,  // Millions
+		B: 1e9,  // Billions
 		T: 1e12, // Trillions
 		Q: 1e15, // Quadrillions
 	}; // TODO: export and single array.
 
-	const regex = "^([\\d.]+)([" + Object.keys(units).join('') + "]?)$"; // Original: /^([\d.]+)([KMBTQ]?)$/;
+	const regex = "^([\\d.]+)([" + Object.keys(units).join('') + "]?)$";
 	const match = formattedMoney.toString().toUpperCase().match(regex);
 
 	if (!match) {
@@ -171,16 +171,16 @@ export function parseFormattedMoney(formattedMoney) {
 }
 
 /**
- * @param {number} gigabytes
+ * @param {number} gigabytes Number of gigabytes without symbols.
  * @param {number=} numberOfFractionDigits (Optional) Default 0.
- * @returns {string} formatted ram value with symbol e.g. 4 GB.
+ * @returns {string} Formatted ram value with symbol e.g. 4 GB.
  **/
 export function formatRAM(gigabytes, numberOfFractionDigits = 0) {
 	let output = gigabytes.toString();
 	const units = [
 		{ value: 1e6, symbol: "PB" }, // Petabytes
 		{ value: 1e3, symbol: "TB" }, // Terabytes
-		{ value: 1, symbol: "GB" }, // Gigabytes
+		{ value: 1, symbol: "GB" },   // Gigabytes
 	];
 
 	for (let i = 0; i < units.length; i++) {
@@ -228,7 +228,7 @@ export function color(color, text) {
 
 /**
  * @param {string} text Text to be colored.
- * @returns {string} Colored text in MONEY_COLOR color.
+ * @returns {string} Colored text in `MONEY_COLOR` color.
  **/
 export function colorMoney(text) {
 	return color(MONEY_COLOR, text);
@@ -236,7 +236,7 @@ export function colorMoney(text) {
 
 /**
  * @param {string} text Text to be colored.
- * @returns {string} Colored text in WARNING_COLOR color.
+ * @returns {string} Colored text in `WARNING_COLOR` color.
  **/
 export function colorWarning(text) {
 	return color(WARNING_COLOR, text);
@@ -244,7 +244,7 @@ export function colorWarning(text) {
 
 /**
  * @param {string} text Text to be colored.
- * @returns {string} Colored text in ERROR_COLOR color.
+ * @returns {string} Colored text in `ERROR_COLOR` color.
  **/
 export function colorError(text) {
 	return color(ERROR_COLOR, text);

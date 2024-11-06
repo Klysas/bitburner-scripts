@@ -1,3 +1,7 @@
+//========================================================
+//	COMMAND
+//========================================================
+
 /**
  * Will terminate the script and print error message IF command was not provided.
  * 
@@ -28,6 +32,10 @@ export function exitOnInvalidCommand(ns, command, validCommands) {
 	ns.tprintf(`FAILED: Command is not supported. Commands: ${validCommands}`);
 	ns.exit();
 }
+
+//========================================================
+//	ARGUMENT
+//========================================================
 
 /**
  * Will terminate the script and print error message IF argument was not provided.

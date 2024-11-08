@@ -1,6 +1,26 @@
 import { RESET_COLOR, MONEY_COLOR, WARNING_COLOR, ERROR_COLOR } from "scripts/constants";
 
 
+/**
+ * Finds other process of current script and restarts it with same arguments(also kills process which called this function).
+ * 
+ * NOTE: restarts only FIRST found other process.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @throws Will throw error if there are no other running processes of current script.
+ */
+export function restartCurrentScript(ns) {
+	const instance = getOtherInstancesOfCurrentScript(ns)[0];
+	if (!instance) throw "FAILED: running process not found.";
+
+	const scriptFile = instance.filename;
+	const args = instance.args;
+	const threadsCount = instance.threads;
+
+	ns.kill(instance.pid);
+	ns.spawn(scriptFile, { threads: threadsCount, spawnDelay: 0 }, ...args);
+}
+
 /** 
  * Retries function call specified number of times and checks its output, stops when it was successful or exceeded `attemptsCount`.
  * 
@@ -19,6 +39,16 @@ export async function retry(ns, sleepInMs, attemptsCount, func, successResult = 
 	return false;
 }
 
+/**
+ * @param {NS} ns Netscript instance.
+ * @returns {ProcessInfo[]} Array of other running instances of current script.
+ */
+function getOtherInstancesOfCurrentScript(ns) {
+	const currentScriptName = ns.getScriptName();
+	const currentPID = ns.pid;
+	return ns.ps().filter((s) => s.filename == currentScriptName && s.pid != currentPID);
+}
+
 /** 
  * Checks if there are other instances running of the same script and opens them all instead.
  * 
@@ -27,10 +57,7 @@ export async function retry(ns, sleepInMs, attemptsCount, func, successResult = 
  * @param {number=} height (Optional) Height of opened terminal window.
  **/
 export function openExistingIfAlreadyRunning(ns, width, height) {
-	const currentScriptName = ns.getScriptName();
-	const currentPID = ns.pid;
-	const otherInstancesRunning = ns
-		.ps().filter((s) => s.filename == currentScriptName && s.pid != currentPID);
+	const otherInstancesRunning = getOtherInstancesOfCurrentScript(ns);
 
 	if (otherInstancesRunning.length == 0) {
 		return;

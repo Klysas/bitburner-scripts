@@ -1,6 +1,6 @@
 import { MINING_MANAGER_PORT } from "scripts/constants";
 import { getMiningTarget, getUnlockedServers } from "scripts/storage";
-import { formatRAM, openExistingIfAlreadyRunning, tprintLines } from "scripts/utils";
+import { formatRAM, openExistingIfAlreadyRunning, tprintLines, restartCurrentScript } from "scripts/utils";
 
 const HOME_SERVER_RAM_RESERVE = 200;
 const MINER_SCRIPT = "/scripts/remote/miner.js";
@@ -8,7 +8,7 @@ var MINER_SCRIPT_RAM_USAGE;
 var MINING_TARGET;
 
 export function autocomplete(data, args) {
-	return [...data.servers];
+	return [...data.servers, "restart"];
 }
 
 // TODO: Save log, have log argument to see what happened.
@@ -23,10 +23,19 @@ export function autocomplete(data, args) {
  * @param {NS} ns
  **/
 export async function main(ns) {
+	let [argument] = ns.args;
+	if (argument && argument === "restart") {
+		try {
+			restartCurrentScript(ns);
+		} catch (error) {
+			ns.tprintf(error);
+		}
+		return;
+	}
 	openExistingIfAlreadyRunning(ns);
+
 	ns.disableLog("sleep");
 	MINER_SCRIPT_RAM_USAGE = ns.getScriptRam(MINER_SCRIPT);
-	let [argument] = ns.args;
 
 	if (!argument) argument = getMiningTarget(ns);
 	if (!argument) {

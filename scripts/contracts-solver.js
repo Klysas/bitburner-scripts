@@ -8,6 +8,7 @@ export function autocomplete(data, args) {
 }
 
 const SOLUTIONS = {
+	"Algorithmic Stock Trader I": solveStockTrader1,
 	"Algorithmic Stock Trader II": solveStockTrader2,
 	"Algorithmic Stock Trader III": solveStockTrader3,
 	"Algorithmic Stock Trader IV": solveStockTrader4,
@@ -175,6 +176,20 @@ function solveArrayJumpingGame2(ns, hostname, file) {
 	} while (weight < weightArray.length);
 
 	return jumps + 1;
+}
+
+/** 
+ * Provides answer to "Algorithmic Stock Trader I" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveStockTrader1(ns, hostname, file) {
+	const array = ns.codingcontract.getData(file, hostname);
+
+	return calculateMaximumProfitWithLimitedTransactions(array, 1);
 }
 
 /** 

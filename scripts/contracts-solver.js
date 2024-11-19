@@ -15,6 +15,7 @@ const SOLUTIONS = {
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Array Jumping Game II": solveArrayJumpingGame2,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
+	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
@@ -305,4 +306,45 @@ function solveMergeOverlappingIntervals(ns, hostname, file) {
 	};
 
 	return merge(initialIntervals);
+}
+
+/** 
+ * Provides answer to "Generate IP Addresses" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveGenerateIPAddresses(ns, hostname, file) {
+	const digitsString = ns.codingcontract.getData(file, hostname);
+
+	const MAXIMUM_DIGITS_COUNT = 12;
+	const MINIMUM_DIGITS_COUNT = 4;
+
+	if (digitsString.length < MINIMUM_DIGITS_COUNT || digitsString.length > MAXIMUM_DIGITS_COUNT)
+		return [];
+
+	const constructValidIPs = (leadingIpPart, followingDigitsString) => {
+		const validIPs = [];
+		const maximumFollowingDigitsCount = MAXIMUM_DIGITS_COUNT - leadingIpPart.split(".").length * 3;
+
+		for (let i = 1; i <= 3; i++) {
+			if (i > followingDigitsString.length) continue; // Avoids generating duplicate ips when there are less than 3 following digits
+
+			const ipPart = followingDigitsString.slice(0, i);
+			const followingDigitsEnding = followingDigitsString.slice(i);
+
+			if (ipPart.length > 1 && ipPart[0] == 0) continue;
+			if (Number(ipPart) > 255) continue;
+			if (followingDigitsEnding.length > maximumFollowingDigitsCount) continue;
+
+			const ip = leadingIpPart + ipPart + (maximumFollowingDigitsCount ? "." : "");
+			validIPs.push(...(maximumFollowingDigitsCount ? constructValidIPs(ip, followingDigitsEnding) : [ip]));
+		}
+
+		return validIPs;
+	};
+
+	return constructValidIPs("", digitsString);
 }

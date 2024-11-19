@@ -168,8 +168,9 @@ function solveArrayJumpingGame2(ns, hostname, file) {
 	let weight = weightArray[0];
 
 	do {
-		if (!array[weight]) return 0;
+		const oldWeight = weight;
 		weight = Math.max(...weightArray.slice(0, weight + 1));
+		if (oldWeight === weight) return 0;
 		jumps++;
 	} while (weight < weightArray.length);
 

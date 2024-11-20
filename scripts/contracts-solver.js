@@ -18,6 +18,7 @@ const SOLUTIONS = {
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
+	"Sanitize Parentheses in Expression": solveSanitizeParenthesesInExpression,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
 };
@@ -388,4 +389,54 @@ function solveProper2ColoringOfAGraph(ns, hostname, file) {
 	}
 
 	return vertices.map((v) => v.color);
+}
+
+/** 
+ * Provides answer to "Sanitize Parentheses in Expression" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveSanitizeParenthesesInExpression(ns, hostname, file) {
+	const str = ns.codingcontract.getData(file, hostname);
+
+	const isValid = (str) => {
+		let balance = 0;
+		for (const char of str) {
+			if (char === "(") balance++;
+			else if (char === ")") balance--;
+			if (balance < 0) return false;
+		}
+		return balance === 0;
+	};
+
+	const result = new Set();
+	const queue = [str];
+	const visited = new Set([str]);
+	let found = false;
+
+	while (queue.length > 0) {
+		const current = queue.shift();
+
+		if (isValid(current)) {
+			result.add(current);
+			found = true;
+		}
+
+		if (found) continue;
+
+		for (let i = 0; i < current.length; i++) {
+			if (current[i] !== "(" && current[i] !== ")") continue;
+
+			const next = current.slice(0, i) + current.slice(i + 1);
+			if (!visited.has(next)) {
+				visited.add(next);
+				queue.push(next);
+			}
+		}
+	}
+
+	return Array.from(result);
 }

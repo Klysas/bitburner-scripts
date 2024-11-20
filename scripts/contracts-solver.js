@@ -17,6 +17,7 @@ const SOLUTIONS = {
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
+	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
 };
@@ -347,4 +348,44 @@ function solveGenerateIPAddresses(ns, hostname, file) {
 	};
 
 	return constructValidIPs("", digitsString);
+}
+
+/** 
+ * Provides answer to "Proper 2-Coloring of a Graph" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveProper2ColoringOfAGraph(ns, hostname, file) {
+	const [verticesCount, edges] = ns.codingcontract.getData(file, hostname);
+	const NO_COLOR = -1;
+
+	const vertices = Array.from({ length: verticesCount }, (value, index) => {
+		return { index: index, edges: [], color: NO_COLOR };
+	});
+	edges.forEach((e) => {
+		vertices[e[0]].edges.push(e);
+		vertices[e[1]].edges.push(e);
+	});
+	vertices[0].color = 1;
+
+	for (let i = 0; i < 100; i++) {
+		for (const vertex of vertices) {
+			if (vertex.color == NO_COLOR) continue;
+
+			const connectedVertexIndexes = vertex.edges.map((e) => e[0] ^ e[1] ^ vertex.index);
+			const connectedVertices = vertices.filter((v) => connectedVertexIndexes.includes(v.index));
+
+			for (const connectedVertex of connectedVertices) {
+				if (connectedVertex.color == vertex.color) return [];
+
+				connectedVertex.color = vertex.color ^ 1;
+			}
+		}
+		if (vertices.every((v) => v.color != NO_COLOR)) break;
+	}
+
+	return vertices.map((v) => v.color);
 }

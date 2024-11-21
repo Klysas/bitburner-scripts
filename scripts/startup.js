@@ -8,6 +8,7 @@ export async function main(ns) {
 		{ file: "/scripts/simple-mining-manager.js", args: [] },
 		{ file: "/scripts/bank.js", args: ["reserve", "200k"] },
 		{ file: "/scripts/hw/purchase-servers.js", args: [8] },
+		{ file: "/scripts/hud.js", args: ["start", "location", "scripts"] },
 	];
 
 	for (const script of scripts) {

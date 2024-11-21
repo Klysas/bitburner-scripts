@@ -2,6 +2,21 @@ import { RESET_COLOR, MONEY_COLOR, WARNING_COLOR, ERROR_COLOR } from "scripts/co
 
 
 /**
+ * Finds other process of current script and kills it.
+ * 
+ * NOTE: kills only FIRST found other process.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @throws Will throw error if there are no other running processes of current script.
+ */
+export function killCurrentScript(ns) {
+	const instance = getOtherInstancesOfCurrentScript(ns)[0];
+	if (!instance) throw "FAILED: running process not found.";
+
+	ns.kill(instance.pid);
+}
+
+/**
  * Finds other process of current script and restarts it with same arguments(also kills process which called this function).
  * 
  * NOTE: restarts only FIRST found other process.

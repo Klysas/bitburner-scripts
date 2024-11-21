@@ -55,11 +55,15 @@ export function exitOnNoArgument(ns, argument, validArguments) {
  * Will terminate the script and print error message IF argument was not provided OR
  * it is not from `validArguments` list.
  * 
+ * NOTE: If `validArguments` array has no values, then `argument` can be null.
+ * 
  * @param {NS} ns Netscript instance.
  * @param {string} argument Argument to be validated.
  * @param {string[]} validArguments List of valid arguments.
  */
 export function exitOnInvalidArgument(ns, argument, validArguments) {
+	if (validArguments.length == 0 && !argument) return;
+
 	exitOnNoArgument(ns, argument, validArguments);
 
 	if (validArguments.includes(argument)) return;

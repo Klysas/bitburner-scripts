@@ -19,6 +19,7 @@ const SOLUTIONS = {
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
 	"Sanitize Parentheses in Expression": solveSanitizeParenthesesInExpression,
+	"Shortest Path in a Grid": solveShortestPathInAGrid,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
 	"Total Ways to Sum II": solveTotalWaysToSum2,
@@ -460,4 +461,52 @@ function solveSanitizeParenthesesInExpression(ns, hostname, file) {
 	}
 
 	return Array.from(result);
+}
+
+/** 
+ * Provides answer to "Shortest Path in a Grid" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveShortestPathInAGrid(ns, hostname, file) {
+	const grid = ns.codingcontract.getData(file, hostname);
+	const EMPTY = 0;
+	const MAXIMUM_X = grid[0].length - 1;
+	const MAXIMUM_Y = grid.length - 1;
+	const DIRECTIONS = [
+		{ x: 0, y: -1, dir: 'U' },// Up
+		{ x: 0, y: 1, dir: 'D' }, // Down
+		{ x: 1, y: 0, dir: 'R' }, // Right
+		{ x: -1, y: 0, dir: 'L' } // Left
+	];
+
+	const queue = [{ x: 0, y: 0, path: "" }];
+	const visited = new Set(["0,0"]);
+
+	while (queue.length > 0) {
+		const { x, y, path } = queue.shift();
+
+		if (x === MAXIMUM_X && y === MAXIMUM_Y) 
+			return path;
+
+		for (const { x: dx, y: dy, dir } of DIRECTIONS) {
+			const newX = x + dx;
+			const newY = y + dy;
+
+			if (
+				newX >= 0 && newX <= MAXIMUM_X &&
+				newY >= 0 && newY <= MAXIMUM_Y &&
+				grid[newY][newX] === EMPTY &&
+				!visited.has(`${newX},${newY}`)
+			) {
+				visited.add(`${newX},${newY}`);
+				queue.push({ x: newX, y: newY, path: path + dir });
+			}
+		}
+	}
+
+	return "";
 }

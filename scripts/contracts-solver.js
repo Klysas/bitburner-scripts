@@ -15,6 +15,7 @@ const SOLUTIONS = {
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Array Jumping Game II": solveArrayJumpingGame2,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
+	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
@@ -509,4 +510,26 @@ function solveShortestPathInAGrid(ns, hostname, file) {
 	}
 
 	return "";
+}
+
+/** 
+ * Provides answer to "Find Largest Prime Factor" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveFindLargestPrimeFactor(ns, hostname, file) {
+	let number = ns.codingcontract.getData(file, hostname);
+	let divisor = 2;
+
+	while (number > 1) {
+		if (number % divisor == 0) 
+			number /= divisor;
+		else if (divisor > Math.pow(number, 2)) 
+			return number;
+		else divisor += 1;
+	}
+	return divisor;
 }

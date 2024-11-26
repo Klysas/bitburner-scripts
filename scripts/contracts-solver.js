@@ -175,7 +175,7 @@ function solveArrayJumpingGame2(ns, hostname, file) {
 		weight = Math.max(...weightArray.slice(0, weight + 1));
 		if (oldWeight === weight) return 0;
 		jumps++;
-	} while (weight < weightArray.length);
+	} while (weight < weightArray.length - 1);
 
 	return jumps + 1;
 }

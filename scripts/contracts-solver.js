@@ -21,6 +21,7 @@ const SOLUTIONS = {
 	"Sanitize Parentheses in Expression": solveSanitizeParenthesesInExpression,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
+	"Total Ways to Sum II": solveTotalWaysToSum2,
 };
 
 /** @param {NS} ns */
@@ -271,6 +272,26 @@ function solveTotalWaysToSum(ns, hostname, file) {
 	table[0] = 1;
 
 	for (let i = 1; i < number; i++) 
+		for (let j = i; j <= number; j++) 
+			table[j] += table[j - i];
+
+	return table[number];
+}
+
+/** 
+ * Provides answer to "Total Ways to Sum II" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveTotalWaysToSum2(ns, hostname, file) {
+	const [number, integers] = ns.codingcontract.getData(file, hostname);
+	let table = new Array(number + 1).fill(0);
+	table[0] = 1;
+
+	for (const i of integers) 
 		for (let j = i; j <= number; j++) 
 			table[j] += table[j - i];
 

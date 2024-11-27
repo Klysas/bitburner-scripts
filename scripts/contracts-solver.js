@@ -21,6 +21,7 @@ const SOLUTIONS = {
 	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
 	"Sanitize Parentheses in Expression": solveSanitizeParenthesesInExpression,
 	"Shortest Path in a Grid": solveShortestPathInAGrid,
+	"Spiralize Matrix": solveSpiralizeMatrix,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
 	"Total Ways to Sum II": solveTotalWaysToSum2,
@@ -532,4 +533,47 @@ function solveFindLargestPrimeFactor(ns, hostname, file) {
 		else divisor += 1;
 	}
 	return divisor;
+}
+
+/** 
+ * Provides answer to "Spiralize Matrix" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveSpiralizeMatrix(ns, hostname, file) {
+	const matrix = ns.codingcontract.getData(file, hostname);
+	const ELEMENTS_COUNT_IN_MATRIX = matrix.reduce((accumulator, currentValue) => accumulator + currentValue.length, 0);
+	const output = [];
+	const currentPosition = { x: -1, y: 0 }; // Start out of Matrix, so first postion is {0,0}
+	const visited = new Set();
+	const DIRECTIONS = [
+		{ xChange: 1, yChange: 0 },
+		{ xChange: 0, yChange: 1 },
+		{ xChange: -1, yChange: 0 },
+		{ xChange: 0, yChange: -1 },
+	];
+	let directionIndex = 0;
+
+	while (ELEMENTS_COUNT_IN_MATRIX > visited.size) {
+		let { xChange, yChange } = DIRECTIONS[directionIndex];
+		let newX = currentPosition.x + xChange;
+		let newY = currentPosition.y + yChange;
+
+		if (
+			newY >= 0 && newY < matrix.length &&
+			newX >= 0 && newX < matrix[newY].length &&
+			!visited.has(`${newX},${newY}`)
+		) {
+			visited.add(`${newX},${newY}`);
+			currentPosition.x = newX;
+			currentPosition.y = newY;
+			output.push(matrix[currentPosition.y][currentPosition.x]);
+		} else {
+			directionIndex = (directionIndex + 1) % 4;
+		}
+	}
+	return output;
 }

@@ -14,6 +14,7 @@ const SOLUTIONS = {
 	"Algorithmic Stock Trader IV": solveStockTrader4,
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Array Jumping Game II": solveArrayJumpingGame2,
+	"Compression I: RLE Compression": solveCompressionI,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
@@ -596,4 +597,31 @@ function solveMinimumPathSumInATriangle(ns, hostname, file) {
 		}
 	}
 	return triangle[0][0];
+}
+
+/** 
+ * Provides answer to "Compression I: RLE Compression" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveCompressionI(ns, hostname, file) {
+	const str = ns.codingcontract.getData(file, hostname);
+	let outputStr = "";
+	let currentChar = str[0];
+	let currentLenght = 1;
+
+	for (const char of str.slice(1)) {
+		if (char == currentChar && currentLenght < 9) {
+			currentLenght++;
+		} else {
+			outputStr += `${currentLenght}${currentChar}`;
+			currentChar = char;
+			currentLenght = 1;
+		}
+	}
+
+	return outputStr + `${currentLenght}${currentChar}`;
 }

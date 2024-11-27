@@ -15,6 +15,7 @@ const SOLUTIONS = {
 	"Array Jumping Game": solveArrayJumpingGame,
 	"Array Jumping Game II": solveArrayJumpingGame2,
 	"Compression I: RLE Compression": solveCompressionI,
+	"Compression II: LZ Decompression": solveCompressionII,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
@@ -611,17 +612,46 @@ function solveCompressionI(ns, hostname, file) {
 	const str = ns.codingcontract.getData(file, hostname);
 	let outputStr = "";
 	let currentChar = str[0];
-	let currentLenght = 1;
+	let currentLength = 1;
 
 	for (const char of str.slice(1)) {
-		if (char == currentChar && currentLenght < 9) {
-			currentLenght++;
+		if (char == currentChar && currentLength < 9) {
+			currentLength++;
 		} else {
-			outputStr += `${currentLenght}${currentChar}`;
+			outputStr += `${currentLength}${currentChar}`;
 			currentChar = char;
-			currentLenght = 1;
+			currentLength = 1;
 		}
 	}
 
-	return outputStr + `${currentLenght}${currentChar}`;
+	return outputStr + `${currentLength}${currentChar}`;
+}
+
+/** 
+ * Provides answer to "Compression II: LZ Decompression" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveCompressionII(ns, hostname, file) {
+	const encodedStr = ns.codingcontract.getData(file, hostname);
+	let outputStr = "";
+	let chunkType = 0;
+
+	for (let i = 0; i < encodedStr.length; i++) {
+		chunkType ^= 1;
+		const length = Number(encodedStr[i]);
+		if (length == 0) continue;
+
+		if (chunkType) {
+			outputStr += encodedStr.slice(i + 1, i + 1 + length);
+			i += length;
+		} else {
+			outputStr += "".padEnd(length, outputStr.slice(encodedStr[i + 1] * -1));
+			i++;
+		}
+	}
+	return outputStr;
 }

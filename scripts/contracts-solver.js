@@ -18,6 +18,7 @@ const SOLUTIONS = {
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
+	"Minimum Path Sum in a Triangle": solveMinimumPathSumInATriangle,
 	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
 	"Sanitize Parentheses in Expression": solveSanitizeParenthesesInExpression,
 	"Shortest Path in a Grid": solveShortestPathInAGrid,
@@ -576,4 +577,23 @@ function solveSpiralizeMatrix(ns, hostname, file) {
 		}
 	}
 	return output;
+}
+
+/** 
+ * Provides answer to "Minimum Path Sum in a Triangle" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveMinimumPathSumInATriangle(ns, hostname, file) {
+	const triangle = ns.codingcontract.getData(file, hostname);
+
+	for (let y = triangle.length - 2; y >= 0; y--) {
+		for (let x = 0; x < triangle[y].length; x++) {
+			triangle[y][x] += Math.min(triangle[y + 1][x], triangle[y + 1][x + 1]);
+		}
+	}
+	return triangle[0][0];
 }

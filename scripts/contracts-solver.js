@@ -29,6 +29,7 @@ const SOLUTIONS = {
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
 	"Total Ways to Sum": solveTotalWaysToSum,
 	"Total Ways to Sum II": solveTotalWaysToSum2,
+	"Unique Paths in a Grid I": solveUniquePathsInAGridI,
 };
 
 /** @param {NS} ns */
@@ -734,4 +735,29 @@ function solveCompressionIII(ns, hostname, file) {
 */
 function set(state, i, j, str) {
 	if (state[i][j] === undefined || str.length < state[i][j].length) state[i][j] = str;
+}
+
+/** 
+ * Provides answer to "Unique Paths in a Grid I" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveUniquePathsInAGridI(ns, hostname, file) {
+	const [rows, columns] = ns.codingcontract.getData(file, hostname);
+	if (!rows && !columns) return 0;
+
+	const dp = Array.from({ length: rows }, () => Array(columns).fill(0));
+	dp[0][0] = 1;
+
+	for (let i = 0; i < dp.length; i++) {
+		for (let j = 0; j < dp[i].length; j++) {
+			if (dp[i][j] > 0) continue; // Should skip only [0;0]
+
+			dp[i][j] = (i > 0 ? dp[i - 1][j] : 0) + (j > 0 ? dp[i][j - 1] : 0);
+		}
+	}
+	return dp[rows - 1][columns - 1];
 }

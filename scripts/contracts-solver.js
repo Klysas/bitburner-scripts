@@ -16,6 +16,7 @@ const SOLUTIONS = {
 	"Array Jumping Game II": solveArrayJumpingGame2,
 	"Compression I: RLE Compression": solveCompressionI,
 	"Compression II: LZ Decompression": solveCompressionII,
+	"Compression III: LZ Compression": solveCompressionIII,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
@@ -654,4 +655,83 @@ function solveCompressionII(ns, hostname, file) {
 		}
 	}
 	return outputStr;
+}
+
+/** 
+ * Provides answer to "Compression III: LZ Compression" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveCompressionIII(ns, hostname, file) {
+	const str = ns.codingcontract.getData(file, hostname);
+	let cur_state = Array.from(Array(10), (_) => Array(10)), new_state, tmp_state, result;
+	cur_state[0][1] = ""; // Initial state is a literal of length 1
+
+	for (let i = 1; i < str.length; i++) {
+		new_state = Array.from(Array(10), (_) => Array(10));
+		const c = str[i];
+		// TYPE 1: Copy up to 9 characters directly
+		for (let len = 1; len <= 9; len++) {
+			const input = cur_state[0][len];
+			if (input === undefined) continue;
+			if (len < 9) set(new_state, 0, len + 1, input); // Extend current literal
+			else set(new_state, 0, 1, input + "9" + str.substring(i - 9, i) + "0"); // Start new literal
+			for (let offset = 1; offset <= Math.min(9, i); offset++) {
+				// Start new reference
+				if (str[i - offset] === c)
+					set(new_state, offset, 1, input + len + str.substring(i - len, i));
+			}
+		}
+		// TYPE 2: Reference previous characters
+		for (let offset = 1; offset <= 9; offset++) {
+			for (let len = 1; len <= 9; len++) {
+				const input = cur_state[offset][len];
+				if (input === undefined) continue;
+				if (str[i - offset] === c) {
+					if (len < 9) set(new_state, offset, len + 1, input); // Extend current reference
+					else set(new_state, offset, 1, input + "9" + offset + "0"); // Start new reference
+				}
+				set(new_state, 0, 1, input + len + offset); // Start new literal
+				// End current reference and start new reference
+				for (let new_offset = 1; new_offset <= Math.min(9, i); new_offset++) {
+					if (str[i - new_offset] === c) set(new_state, new_offset, 1, input + len + offset + "0");
+				}
+			}
+		}
+		tmp_state = new_state;
+		new_state = cur_state;
+		cur_state = tmp_state;
+	}
+
+	for (let len = 1; len <= 9; len++) {
+		let input = cur_state[0][len];
+		if (input === undefined) continue;
+		input += len + str.substring(str.length - len, str.length);
+		if (result === undefined || input.length < result.length) result = input;
+	}
+
+	for (let offset = 1; offset <= 9; offset++) {
+		for (let len = 1; len <= 9; len++) {
+			let input = cur_state[offset][len];
+			if (input === undefined) continue;
+			input += len + "" + offset;
+			if (result === undefined || input.length < result.length) result = input;
+		}
+	}
+
+	return result ?? "";
+}
+/**
+ * Used by `solveCompressionIII`.
+ * 
+ * @param {string[][]} state
+ * @param {number} i
+ * @param {number} j
+ * @param {string} str
+*/
+function set(state, i, j, str) {
+	if (state[i][j] === undefined || str.length < state[i][j].length) state[i][j] = str;
 }

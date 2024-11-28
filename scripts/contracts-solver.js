@@ -30,6 +30,7 @@ const SOLUTIONS = {
 	"Total Ways to Sum": solveTotalWaysToSum,
 	"Total Ways to Sum II": solveTotalWaysToSum2,
 	"Unique Paths in a Grid I": solveUniquePathsInAGridI,
+	"Unique Paths in a Grid II": solveUniquePathsInAGridII,
 };
 
 /** @param {NS} ns */
@@ -752,4 +753,33 @@ function solveUniquePathsInAGridI(ns, hostname, file) {
 		}
 	}
 	return dp[rows - 1][columns - 1];
+}
+
+/** 
+ * Provides answer to "Unique Paths in a Grid II" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveUniquePathsInAGridII(ns, hostname, file) {
+	const dp = ns.codingcontract.getData(file, hostname);
+	const OBSTACLE = -1;
+	for (let i = 0; i < dp.length; i++) {
+		for (let j = 0; j < dp[i].length; j++) {
+			if (dp[i][j] == 1) dp[i][j] = OBSTACLE;
+		}
+	}
+	dp[0][0] = 1;
+
+	for (let i = 0; i < dp.length; i++) {
+		for (let j = 0; j < dp[i].length; j++) {
+			if (dp[i][j] > 0) continue; // Should skip only [0;0]
+			if (dp[i][j] == OBSTACLE) continue;
+
+			dp[i][j] = Math.max(0, i > 0 ? dp[i - 1][j] : 0) + Math.max(0, j > 0 ? dp[i][j - 1] : 0);
+		}
+	}
+	return dp[dp.length - 1][dp[0].length - 1];
 }

@@ -668,6 +668,9 @@ function solveCompressionII(ns, hostname, file) {
 */
 function solveCompressionIII(ns, hostname, file) {
 	const str = ns.codingcontract.getData(file, hostname);
+	const set = (state, i, j, str) => {
+		if (state[i][j] === undefined || str.length < state[i][j].length) state[i][j] = str;
+	};
 	let cur_state = Array.from(Array(10), (_) => Array(10)), new_state, tmp_state, result;
 	cur_state[0][1] = ""; // Initial state is a literal of length 1
 
@@ -724,17 +727,6 @@ function solveCompressionIII(ns, hostname, file) {
 	}
 
 	return result ?? "";
-}
-/**
- * Used by `solveCompressionIII`.
- * 
- * @param {string[][]} state
- * @param {number} i
- * @param {number} j
- * @param {string} str
-*/
-function set(state, i, j, str) {
-	if (state[i][j] === undefined || str.length < state[i][j].length) state[i][j] = str;
 }
 
 /** 

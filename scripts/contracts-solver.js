@@ -180,6 +180,7 @@ function solveArrayJumpingGame2(ns, hostname, file) {
 	const weightArray = array.map((v, i) => v + i);
 	let jumps = 0;
 	let weight = weightArray[0];
+	if (weight >= weightArray.length - 1) return 1;
 
 	do {
 		const oldWeight = weight;

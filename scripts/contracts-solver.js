@@ -18,6 +18,7 @@ const SOLUTIONS = {
 	"Compression II: LZ Decompression": solveCompressionII,
 	"Compression III: LZ Compression": solveCompressionIII,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
+	// "Find All Valid Math Expressions": solveFindAllValidMathExpressions,
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
@@ -782,4 +783,61 @@ function solveUniquePathsInAGridII(ns, hostname, file) {
 		}
 	}
 	return dp[dp.length - 1][dp[0].length - 1];
+}
+
+/** 
+ * Provides answer to "Find All Valid Math Expressions" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveFindAllValidMathExpressions(ns, hostname, file) {
+	const [digits, targetNumber] = ns.codingcontract.getData(file, hostname);
+	const SYMBOLS = ["+", "-", "*"];
+	const outputExpressions = [];
+
+	const queue = [digits];
+	const visited = new Set(digits);
+	while(queue.length > 0){
+		const str = queue.shift();
+		for (let i = 1; i < str.length; i++) {
+			if (str[i] == " " || str[i - 1] == " ") continue;
+			if (str[i] == "0" && i + 1 < str.length ? str[i + 1] != " " : false) continue;
+
+			const newStr = str.slice(0, i) + " " + str.slice(i);
+			if (!visited.has(newStr)) {
+				visited.add(newStr);
+				queue.push(newStr);
+			}
+		}
+
+		const numbers = str.split(" ").map(s => parseInt(s));
+		if(numbers.length == 1){
+			if(numbers[0] == targetNumber) outputExpressions.push([numbers[0].toString()]);
+			continue;
+		}
+
+		const symbolsLength = numbers.length - 1;
+		let possibleExpressions = SYMBOLS.map((s) => numbers[0] + s);
+
+		for (let i = 1; i < symbolsLength; i++) {
+			const newPossibleExpressions = [];
+
+			possibleExpressions.forEach((combination) => {
+				SYMBOLS.forEach((symbol) => {
+					newPossibleExpressions.push(combination + numbers[i] + symbol);
+				});
+			});
+
+			possibleExpressions = newPossibleExpressions;
+		}
+		possibleExpressions = possibleExpressions.map((e) => e + numbers[numbers.length - 1]);
+
+		for (const pe of possibleExpressions) {
+			if (eval(pe) == targetNumber) outputExpressions.push(pe);
+		}
+	}
+	return outputExpressions;
 }

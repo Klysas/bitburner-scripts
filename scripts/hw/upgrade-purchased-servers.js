@@ -44,7 +44,7 @@ export async function main(ns) {
 		}
 	}
 
-	ns.tail();
+	ns.ui.openTail();
 	ns.resizeTail(T_WIDTH, T_HEIGHT);
 
 	do {

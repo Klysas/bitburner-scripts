@@ -77,14 +77,14 @@ export function openExistingIfAlreadyRunning(ns, width, height) {
 	if (otherInstancesRunning.length == 0) {
 		return;
 	}
-	ns.closeTail();
+	ns.ui.closeTail();
 
 	ns.tprintf(colorWarning(`Found other instances(${otherInstancesRunning.length}) already running. Openning their terminals...`));
 
 	for (const instance of otherInstancesRunning) {
-		ns.tail(instance.pid);
+		ns.ui.openTail(instance.pid);
 		if (width != undefined && height != undefined) {
-			ns.resizeTail(width, height, instance.pid);
+			ns.ui.resizeTail(width, height, instance.pid);
 		}
 	}
 

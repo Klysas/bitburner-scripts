@@ -43,7 +43,7 @@ export async function main(ns) {
 		}
 	}
 
-	ns.tail();
+	ns.ui.openTail();
 	ns.resizeTail(T_WIDTH, T_HEIGHT);
 
 	let status = "N/A";
@@ -85,7 +85,7 @@ export async function main(ns) {
 	if (
 		await ns.prompt(`Do you want to start servers upgrade script ?`, { type: "boolean" })
 	) {
-		ns.closeTail(ns.pid);
+		ns.ui.closeTail(ns.pid);
 		ns.run("/scripts/hw/upgrade-purchased-servers.js", 1);
 	}
 }

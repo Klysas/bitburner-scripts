@@ -1,5 +1,13 @@
 import { RESET_COLOR, MONEY_COLOR, WARNING_COLOR, ERROR_COLOR } from "scripts/constants";
 
+/**
+ * @param {object} object 
+ * @param {any} value 
+ * @returns
+ */
+export function getKeyByValue(object, value) {
+	return Object.keys(object).find((key) => object[key] === value);
+}
 
 /**
  * Finds other process of current script and restarts it with same arguments(also kills process which called this function).

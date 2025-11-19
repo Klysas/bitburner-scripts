@@ -43,8 +43,8 @@ export async function main(ns) {
 		}
 	}
 
-	ns.tail();
-	ns.resizeTail(T_WIDTH, T_HEIGHT);
+	ns.ui.openTail();
+	ns.ui.resizeTail(T_WIDTH, T_HEIGHT);
 
 	let status = "N/A";
 	let sleepTime = 2000;
@@ -85,7 +85,7 @@ export async function main(ns) {
 	if (
 		await ns.prompt(`Do you want to start servers upgrade script ?`, { type: "boolean" })
 	) {
-		ns.closeTail(ns.pid);
+		ns.ui.closeTail(ns.pid);
 		ns.run("/scripts/hw/upgrade-purchased-servers.js", 1);
 	}
 }

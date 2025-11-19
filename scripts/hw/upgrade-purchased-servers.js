@@ -44,8 +44,8 @@ export async function main(ns) {
 		}
 	}
 
-	ns.tail();
-	ns.resizeTail(T_WIDTH, T_HEIGHT);
+	ns.ui.openTail();
+	ns.ui.resizeTail(T_WIDTH, T_HEIGHT);
 
 	do {
 		let status = "N/A";

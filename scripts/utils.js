@@ -10,6 +10,21 @@ export function getKeyByValue(object, value) {
 }
 
 /**
+ * Finds other process of current script and kills it.
+ * 
+ * NOTE: kills only FIRST found other process.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @throws Will throw error if there are no other running processes of current script.
+ */
+export function killCurrentScript(ns) {
+	const instance = getOtherInstancesOfCurrentScript(ns)[0];
+	if (!instance) throw "FAILED: running process not found.";
+
+	ns.kill(instance.pid);
+}
+
+/**
  * Finds other process of current script and restarts it with same arguments(also kills process which called this function).
  * 
  * NOTE: restarts only FIRST found other process.
@@ -70,14 +85,14 @@ export function openExistingIfAlreadyRunning(ns, width, height) {
 	if (otherInstancesRunning.length == 0) {
 		return;
 	}
-	ns.closeTail();
+	ns.ui.closeTail();
 
 	ns.tprintf(colorWarning(`Found other instances(${otherInstancesRunning.length}) already running. Openning their terminals...`));
 
 	for (const instance of otherInstancesRunning) {
-		ns.tail(instance.pid);
+		ns.ui.openTail(instance.pid);
 		if (width != undefined && height != undefined) {
-			ns.resizeTail(width, height, instance.pid);
+			ns.ui.resizeTail(width, height, instance.pid);
 		}
 	}
 

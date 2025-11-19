@@ -45,7 +45,7 @@ export async function main(ns) {
 	}
 
 	ns.ui.openTail();
-	ns.resizeTail(T_WIDTH, T_HEIGHT);
+	ns.ui.resizeTail(T_WIDTH, T_HEIGHT);
 
 	do {
 		let status = "N/A";

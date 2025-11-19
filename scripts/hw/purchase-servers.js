@@ -44,7 +44,7 @@ export async function main(ns) {
 	}
 
 	ns.ui.openTail();
-	ns.resizeTail(T_WIDTH, T_HEIGHT);
+	ns.ui.resizeTail(T_WIDTH, T_HEIGHT);
 
 	let status = "N/A";
 	let sleepTime = 2000;

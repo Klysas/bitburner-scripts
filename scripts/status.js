@@ -1,5 +1,5 @@
 import { formatMoney, formatRAM, getKeyByValue } from "scripts/utils";
-import { PrintTable, DefaultStyle, ColorPrint, pctColor } from "scripts/tables";
+import { PrintTable, DefaultStyle, ColorPrint, pctColor } from "scripts/utils/tables";
 import { getUnlockedServers, getAvailableServers, getPurchasedServers } from "scripts/storage";
 import { exitOnInvalidCommand } from "scripts/utils/validations";
 import { NONE } from "scripts/utils/constants";

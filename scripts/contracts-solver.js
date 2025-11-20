@@ -1,5 +1,5 @@
 import { findFiles } from "scripts/find-files";
-import { tprintLines } from "scripts/utils";
+import { tprintLines } from "scripts/utils/printing";
 
 const COMMANDS = ["description"];
 
@@ -18,12 +18,12 @@ const SOLUTIONS = {
 	"Compression II: LZ Decompression": solveCompressionII,
 	"Compression III: LZ Compression": solveCompressionIII,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
-	// "Find All Valid Math Expressions": solveFindAllValidMathExpressions,
-	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
+	// "Find All Valid Math Expressions": solveFindAllValidMathExpressions, // FIX: Crashes
+	"Find Largest Prime Factor": solveFindLargestPrimeFactor, // FIX: Takes long time.
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Minimum Path Sum in a Triangle": solveMinimumPathSumInATriangle,
-	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
+	// "Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph, // FIX: Fails to solve.
 	"Sanitize Parentheses in Expression": solveSanitizeParenthesesInExpression,
 	"Shortest Path in a Grid": solveShortestPathInAGrid,
 	"Spiralize Matrix": solveSpiralizeMatrix,
@@ -394,7 +394,7 @@ function solveGenerateIPAddresses(ns, hostname, file) {
 function solveProper2ColoringOfAGraph(ns, hostname, file) {
 	const [verticesCount, edges] = ns.codingcontract.getData(file, hostname);
 	const NO_COLOR = -1;
-
+	// there can be multiple disconnected graphs(even of one vertex).
 	const vertices = Array.from({ length: verticesCount }, (value, index) => {
 		return { index: index, edges: [], color: NO_COLOR };
 	});

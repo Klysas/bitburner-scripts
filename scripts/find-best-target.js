@@ -1,5 +1,5 @@
 import { getUnlockedServers, saveMiningTarget, getMiningTarget } from "scripts/storage";
-import { tprintLines } from "scripts/utils/utils";
+import { tprintLines } from "scripts/utils/printing";
 
 
 /** @param {NS} ns */

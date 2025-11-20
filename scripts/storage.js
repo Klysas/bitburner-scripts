@@ -1,5 +1,5 @@
 import { NEW_LINE } from "scripts/utils/constants";
-import { tprintLines } from "scripts/utils/utils";
+import { tprintLines } from "scripts/utils/printing";
 import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = ["clear"];

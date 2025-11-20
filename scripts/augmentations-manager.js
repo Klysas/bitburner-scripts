@@ -1,5 +1,5 @@
 import { getSpendableAmount } from "scripts/bank";
-import { tprintLines } from "scripts/utils/utils";
+import { tprintLines } from "scripts/utils/printing";
 import { exitOnInvalidArgument, exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = {

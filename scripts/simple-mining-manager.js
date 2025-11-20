@@ -1,6 +1,7 @@
 import { MINING_MANAGER_PORT } from "scripts/utils/constants";
 import { getMiningTarget, getUnlockedServers } from "scripts/storage";
-import { openExistingIfAlreadyRunning, tprintLines, restartCurrentScript } from "scripts/utils/utils";
+import { openExistingIfAlreadyRunning, restartCurrentScript } from "scripts/utils/utils";
+import { tprintLines } from "scripts/utils/printing";
 import { formatRAM } from "scripts/utils/formatting";
 
 const HOME_SERVER_RAM_RESERVE = 200;

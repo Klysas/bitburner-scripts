@@ -1,4 +1,4 @@
-import { tprintLines } from "scripts/utils/utils";
+import { tprintLines } from "scripts/utils/printing";
 
 export function autocomplete(data, args) {
 	return [...data.servers, "connect"];

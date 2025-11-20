@@ -1,6 +1,6 @@
 import { saveAvailableServers, getAvailableServers, saveUnlockedServers, getUnlockedServers, 
 		saveLockedServers, getLockedServers, savePurchasedServers, getPurchasedServers } from "scripts/storage";
-import { tprintLines } from "scripts/utils/utils";
+import { tprintLines } from "scripts/utils/printing";
 import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = ["all", "purchased", "unlocked", "locked", "refresh"];

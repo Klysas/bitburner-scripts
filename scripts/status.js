@@ -1,4 +1,4 @@
-import { getKeyByValue } from "scripts/utils/utils";
+import { getKeyByValue } from "scripts/utils/common";
 import { formatMoney, formatRAM } from "scripts/utils/formatting";
 import { PrintTable, DefaultStyle, ColorPrint, pctColor } from "scripts/utils/tables";
 import { getUnlockedServers, getAvailableServers, getPurchasedServers } from "scripts/storage";

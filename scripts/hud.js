@@ -1,4 +1,4 @@
-import { killCurrentScript, openExistingIfAlreadyRunning } from "scripts/utils/utils";
+import { killCurrentScript, openExistingIfAlreadyRunning } from "scripts/utils/common";
 import { tprintLines } from "scripts/utils/printing";
 import { formatMoney } from "scripts/utils/formatting";
 import { exitOnInvalidArgument, exitOnInvalidCommand } from "scripts/utils/validations";

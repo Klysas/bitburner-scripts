@@ -1,4 +1,4 @@
-import { MINING_MANAGER_PORT } from "scripts/constants";
+import { MINING_MANAGER_PORT } from "scripts/utils/constants";
 import { getMiningTarget, getUnlockedServers } from "scripts/storage";
 import { formatRAM, openExistingIfAlreadyRunning, tprintLines, restartCurrentScript } from "scripts/utils";
 

@@ -1,6 +1,6 @@
 import { tprintLines, colorWarning } from "scripts/utils";
 import { findPathToHome } from "scripts/find-path-to-server";
-import { PORT_OPENING_PROGRAMS } from "scripts/constants";
+import { PORT_OPENING_PROGRAMS } from "scripts/utils/constants";
 
 const GROUPS = ["backdoor"];
 

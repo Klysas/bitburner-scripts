@@ -1,4 +1,4 @@
-import { NEW_LINE } from "scripts/constants";
+import { NEW_LINE } from "scripts/utils/constants";
 import { tprintLines } from "scripts/utils";
 import { exitOnInvalidCommand } from "scripts/utils/validations";
 

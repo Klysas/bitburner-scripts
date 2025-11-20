@@ -1,4 +1,4 @@
-import { RESET_COLOR, MONEY_COLOR, WARNING_COLOR, ERROR_COLOR } from "scripts/constants";
+import { RESET_COLOR, MONEY_COLOR, WARNING_COLOR, ERROR_COLOR } from "scripts/utils/constants";
 
 /**
  * @param {object} object 

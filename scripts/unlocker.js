@@ -1,6 +1,6 @@
 import { getLockedServers, saveLockedServers, getUnlockedServers, saveUnlockedServers } from "scripts/storage";
 import { tprintLines, retry } from "scripts/utils";
-import { PORT_OPENING_PROGRAMS } from "scripts/constants";
+import { PORT_OPENING_PROGRAMS } from "scripts/utils/constants";
 import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
 
 export function autocomplete(data, args) {

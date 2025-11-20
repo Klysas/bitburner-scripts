@@ -2,7 +2,7 @@ import { formatMoney, formatRAM, getKeyByValue } from "scripts/utils";
 import { PrintTable, DefaultStyle, ColorPrint, pctColor } from "scripts/tables";
 import { getUnlockedServers, getAvailableServers, getPurchasedServers } from "scripts/storage";
 import { exitOnInvalidCommand } from "scripts/utils/validations";
-import { NONE } from "scripts/constants";
+import { NONE } from "scripts/utils/constants";
 
 const MINING_REMOTE_SCRIPTS = {
 	MINE: "scripts/remote/miner.js",

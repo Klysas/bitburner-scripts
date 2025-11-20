@@ -1,4 +1,5 @@
-import { tprintLines, colorWarning } from "scripts/utils/utils";
+import { tprintLines } from "scripts/utils/utils";
+import { colorWarning } from "scripts/utils/formatting";
 import { findPathToHome } from "scripts/find-path-to-server";
 import { PORT_OPENING_PROGRAMS } from "scripts/utils/constants";
 

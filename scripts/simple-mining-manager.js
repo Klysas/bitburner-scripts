@@ -1,6 +1,7 @@
 import { MINING_MANAGER_PORT } from "scripts/utils/constants";
 import { getMiningTarget, getUnlockedServers } from "scripts/storage";
-import { formatRAM, openExistingIfAlreadyRunning, tprintLines, restartCurrentScript } from "scripts/utils/utils";
+import { openExistingIfAlreadyRunning, tprintLines, restartCurrentScript } from "scripts/utils/utils";
+import { formatRAM } from "scripts/utils/formatting";
 
 const HOME_SERVER_RAM_RESERVE = 200;
 const MINER_SCRIPT = "/scripts/remote/miner.js";

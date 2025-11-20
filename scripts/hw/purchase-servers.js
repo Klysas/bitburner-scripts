@@ -1,4 +1,5 @@
-import { getLoadingBar, getCurrentTimeInFormat, colorMoney, colorError, openExistingIfAlreadyRunning, formatMoney, formatRAM, parseFormattedRAM, retry, } from "scripts/utils/utils";
+import { getLoadingBar, getCurrentTimeInFormat, openExistingIfAlreadyRunning, retry, } from "scripts/utils/utils";
+import { colorMoney, colorError, formatMoney, formatRAM, parseFormattedRAM } from "scripts/utils/formatting";
 import { getSpendableAmount } from "scripts/bank";
 import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
 

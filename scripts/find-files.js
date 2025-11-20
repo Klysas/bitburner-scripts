@@ -1,4 +1,4 @@
-import { tprintLines } from "scripts/utils";
+import { tprintLines } from "scripts/utils/utils";
 import { findAllServers } from "scripts/find-servers";
 
 export function autocomplete(data, args) {

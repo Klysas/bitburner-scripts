@@ -1,4 +1,4 @@
-import { formatMoney, parseFormattedMoney, tprintLines, colorMoney } from "scripts/utils";
+import { formatMoney, parseFormattedMoney, tprintLines, colorMoney } from "scripts/utils/utils";
 import { getMoneyReserve, saveMoneyReserve } from "scripts/storage";
 import { exitOnInvalidCommand } from "scripts/utils/validations";
 

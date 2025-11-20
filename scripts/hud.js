@@ -1,4 +1,4 @@
-import { formatMoney, killCurrentScript, openExistingIfAlreadyRunning, tprintLines } from "scripts/utils";
+import { formatMoney, killCurrentScript, openExistingIfAlreadyRunning, tprintLines } from "scripts/utils/utils";
 import { exitOnInvalidArgument, exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = {

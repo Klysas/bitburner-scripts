@@ -1,5 +1,5 @@
 import { getLockedServers, saveLockedServers, getUnlockedServers, saveUnlockedServers } from "scripts/storage";
-import { tprintLines, retry } from "scripts/utils";
+import { tprintLines, retry } from "scripts/utils/utils";
 import { PORT_OPENING_PROGRAMS } from "scripts/utils/constants";
 import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
 

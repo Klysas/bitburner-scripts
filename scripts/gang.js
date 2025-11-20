@@ -1,4 +1,4 @@
-import { tprintLines } from "scripts/utils";
+import { tprintLines } from "scripts/utils/utils";
 import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 const COMMANDS = ["buy", "ascend", "recruit"];

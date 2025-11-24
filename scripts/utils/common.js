@@ -1,4 +1,7 @@
+import { SERVICE_COMMANDS } from "scripts/utils/constants";
 import { colorWarning } from "scripts/utils/formatting";
+import { tprintLines } from "scripts/utils/printing";
+import { exitOnInvalidCommand } from "scripts/utils/validations";
 
 /**
  * @param {object} object 
@@ -75,7 +78,7 @@ function getOtherInstancesOfCurrentScript(ns) {
 /** 
  * Checks if there are other instances running of the same script and opens them all instead.
  * 
- * @param {NS} ns
+ * @param {NS} ns 
  * @param {number=} width (Optional) Width of opened terminal window.
  * @param {number=} height (Optional) Height of opened terminal window.
  **/
@@ -97,6 +100,50 @@ export function openExistingIfAlreadyRunning(ns, width, height) {
 	}
 
 	ns.exit();
+}
+
+/** 
+ * Depending on given command will start or stop the background service.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} serviceName Name of the service that will be used in output messages.
+ * @param {string} command One of {@link SERVICE_COMMANDS} commands.
+ * @param {function} runFunction Function that will run in background.
+ **/
+export async function controlService(ns, serviceName, command, runFunction) {
+	exitOnInvalidCommand(ns, command, SERVICE_COMMANDS);
+
+	switch (command) {
+		case "start": {
+			if (getOtherInstancesOfCurrentScript(ns).length > 0) {
+				tprintLines(ns, `${serviceName} service is already running.`);
+				return;
+			}
+
+			tprintLines(ns, `Started ${serviceName} service.`);
+			await runFunction();
+			break;
+		}
+		case "stop": {
+			try {
+				killCurrentScript(ns);
+				tprintLines(ns, `Stopped ${serviceName} service.`);
+			} catch {
+				tprintLines(ns, `${serviceName} service is not running.`);
+			}
+			break;
+		}
+		case "log": {
+			const otherInstances = getOtherInstancesOfCurrentScript(ns);
+			if (otherInstances.length > 0) {
+				ns.ui.openTail(otherInstances[0].pid);
+			} else tprintLines(ns, `${serviceName} service is not running.`);
+			break;
+		}
+		default:
+			ns.tprintf(`FAILED: Command not implemented.`);
+			return;
+	}
 }
 
 /**

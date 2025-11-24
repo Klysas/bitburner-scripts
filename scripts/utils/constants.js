@@ -8,6 +8,8 @@ export const NONE = "-";
 
 export const HOME_SERVER_RAM_RESERVE_IN_GB = 200;
 
+export const SERVICE_COMMANDS = ["start", "stop", "log"];
+
 export const PORT_OPENING_PROGRAMS = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe", "HTTPWorm.exe", "SQLInject.exe"];
 
 //========================================================

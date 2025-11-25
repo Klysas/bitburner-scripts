@@ -1,7 +1,7 @@
 import { getLoadingBar, getCurrentTimeInFormat, openExistingIfAlreadyRunning, retry, } from "scripts/utils/common";
 import { colorMoney, colorError, formatMoney, formatRAM, parseFormattedRAM } from "scripts/utils/formatting";
 import { getSpendableAmount } from "scripts/bank";
-import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
+import { notifyServerAddedOrModified } from "scripts/services/simple-mining-manager";
 
 const T_WIDTH = 460;
 const T_HEIGHT = 185;

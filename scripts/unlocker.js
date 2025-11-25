@@ -2,7 +2,7 @@ import { getLockedServers, saveLockedServers, getUnlockedServers, saveUnlockedSe
 import { retry } from "scripts/utils/common";
 import { tprintLines } from "scripts/utils/printing";
 import { PORT_OPENING_PROGRAMS } from "scripts/utils/constants";
-import { notifyServerAddedOrModified } from "scripts/simple-mining-manager";
+import { notifyServerAddedOrModified } from "scripts/services/simple-mining-manager";
 
 export function autocomplete(data, args) {
 	return [...data.servers, "locked"];

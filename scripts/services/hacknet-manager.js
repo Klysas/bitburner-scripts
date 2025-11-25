@@ -3,7 +3,7 @@ import { getCurrentTimeInFormat, controlService } from "scripts/utils/common";
 import { NONE, SERVICE_COMMANDS } from "scripts/utils/constants";
 
 const MAX_HACKNET_LEVEL = 200;
-const MAX_HACKNET_RAM = 7;
+const MAX_HACKNET_RAM = 64;
 const MAX_HACKNET_CORES_COUNT = 16;
 
 export function autocomplete(data, args) {

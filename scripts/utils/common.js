@@ -146,6 +146,19 @@ export async function controlService(ns, serviceName, command, runFunction) {
 	}
 }
 
+ /** 
+  * Injects command to terminal as it were typed.
+  * 
+  * @param {string} command Command to be injected into terminal.
+  **/
+export function injectCommand(command) {
+	const terminalInput = document.getElementById("terminal-input");
+	terminalInput.value = command;
+	const handler = Object.keys(terminalInput)[1];
+	terminalInput[handler].onChange({ target: terminalInput });
+	terminalInput[handler].onKeyDown({ key: "Enter", preventDefault: () => null });
+}
+
 /**
  * @returns {string} Current time in format.
  **/

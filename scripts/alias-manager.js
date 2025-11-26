@@ -26,6 +26,7 @@ const ALIASES = [
 	// SERVICES
 	"alias mining-manager='run /scripts/advanced-mining-manager.js'",
 	"alias hacknet-manager='run /scripts/services/hacknet-manager.js'",
+	"alias sleeves-manager='run /scripts/services/sleeves-manager.js'",
 	"alias purchase-servers='run /scripts/hw/purchase-servers.js'",
 	"alias upgrade-servers='run /scripts/hw/upgrade-purchased-servers.js'",
 ];

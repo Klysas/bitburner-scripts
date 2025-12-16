@@ -18,12 +18,12 @@ const SOLUTIONS = {
 	"Compression II: LZ Decompression": solveCompressionII,
 	"Compression III: LZ Compression": solveCompressionIII,
 	"Encryption I: Caesar Cipher": solveCaesarCipher,
-	// "Find All Valid Math Expressions": solveFindAllValidMathExpressions, // FIX: Crashes
-	"Find Largest Prime Factor": solveFindLargestPrimeFactor, // FIX: Takes long time.
+	"Find All Valid Math Expressions": solveFindAllValidMathExpressions,
+	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Minimum Path Sum in a Triangle": solveMinimumPathSumInATriangle,
-	// "Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph, // FIX: Fails to solve.
+	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
 	"Sanitize Parentheses in Expression": solveSanitizeParenthesesInExpression,
 	"Shortest Path in a Grid": solveShortestPathInAGrid,
 	"Spiralize Matrix": solveSpiralizeMatrix,
@@ -392,35 +392,37 @@ function solveGenerateIPAddresses(ns, hostname, file) {
  * @returns {any} Answer to puzzle.
 */
 function solveProper2ColoringOfAGraph(ns, hostname, file) {
-	const [verticesCount, edges] = ns.codingcontract.getData(file, hostname);
+	const [n, edges] = ns.codingcontract.getData(file, hostname, file);
 	const NO_COLOR = -1;
-	// there can be multiple disconnected graphs(even of one vertex).
-	const vertices = Array.from({ length: verticesCount }, (value, index) => {
-		return { index: index, edges: [], color: NO_COLOR };
-	});
-	edges.forEach((e) => {
-		vertices[e[0]].edges.push(e);
-		vertices[e[1]].edges.push(e);
-	});
-	vertices[0].color = 1;
 
-	for (let i = 0; i < 100; i++) {
-		for (const vertex of vertices) {
-			if (vertex.color == NO_COLOR) continue;
-
-			const connectedVertexIndexes = vertex.edges.map((e) => e[0] ^ e[1] ^ vertex.index);
-			const connectedVertices = vertices.filter((v) => connectedVertexIndexes.includes(v.index));
-
-			for (const connectedVertex of connectedVertices) {
-				if (connectedVertex.color == vertex.color) return [];
-
-				connectedVertex.color = vertex.color ^ 1;
-			}
-		}
-		if (vertices.every((v) => v.color != NO_COLOR)) break;
+	const adj = Array.from({ length: n }, () => []);
+	for (const [u, v] of edges) {
+		adj[u].push(v);
+		adj[v].push(u);
 	}
 
-	return vertices.map((v) => v.color);
+	const color = Array(n).fill(NO_COLOR);
+
+	for (let start = 0; start < n; start++) {
+		if (color[start] !== NO_COLOR) continue;
+
+		color[start] = 0;
+		const queue = [start];
+
+		while (queue.length) {
+			const u = queue.shift();
+			for (const v of adj[u]) {
+				if (color[v] === NO_COLOR) {
+					color[v] = color[u] ^ 1;
+					queue.push(v);
+				} else if (color[v] === color[u]) {
+					return [];
+				}
+			}
+		}
+	}
+
+	return color;
 }
 
 /** 
@@ -530,17 +532,24 @@ function solveShortestPathInAGrid(ns, hostname, file) {
  * @returns {any} Answer to puzzle.
 */
 function solveFindLargestPrimeFactor(ns, hostname, file) {
-	let number = ns.codingcontract.getData(file, hostname);
-	let divisor = 2;
+	let n = ns.codingcontract.getData(file, hostname);
+	let largest = 1;
 
-	while (number > 1) {
-		if (number % divisor == 0) 
-			number /= divisor;
-		else if (divisor > Math.pow(number, 2)) 
-			return number;
-		else divisor += 1;
+	while (n % 2 === 0) {
+		largest = 2;
+		n /= 2;
 	}
-	return divisor;
+
+	for (let f = 3; f * f <= n; f += 2) {
+		while (n % f === 0) {
+			largest = f;
+			n /= f;
+		}
+	}
+
+	if (n > 1) largest = n;
+
+	return largest;
 }
 
 /** 
@@ -795,50 +804,31 @@ function solveUniquePathsInAGridII(ns, hostname, file) {
  * @returns {any} Answer to puzzle.
 */
 function solveFindAllValidMathExpressions(ns, hostname, file) {
-	const [digits, targetNumber] = ns.codingcontract.getData(file, hostname);
-	const SYMBOLS = ["+", "-", "*"];
-	const outputExpressions = [];
+	const [digits, target] = ns.codingcontract.getData(file, hostname);
+	const results = [];
 
-	const queue = [digits];
-	const visited = new Set(digits);
-	while(queue.length > 0){
-		const str = queue.shift();
-		for (let i = 1; i < str.length; i++) {
-			if (str[i] == " " || str[i - 1] == " ") continue;
-			if (str[i] == "0" && i + 1 < str.length ? str[i + 1] != " " : false) continue;
+	function dfs(index, path, value, last) {
+		if (index === digits.length) {
+			if (value === target) results.push(path);
+			return;
+		}
 
-			const newStr = str.slice(0, i) + " " + str.slice(i);
-			if (!visited.has(newStr)) {
-				visited.add(newStr);
-				queue.push(newStr);
+		for (let i = index; i < digits.length; i++) {
+			if (i !== index && digits[index] === "0") break;
+
+			const numStr = digits.slice(index, i + 1);
+			const num = Number(numStr);
+
+			if (index === 0) {
+				dfs(i + 1, numStr, num, num);
+			} else {
+				dfs(i + 1, path + "+" + numStr, value + num, num);
+				dfs(i + 1, path + "-" + numStr, value - num, -num);
+				dfs(i + 1, path + "*" + numStr, value - last + last * num, last * num);
 			}
 		}
-
-		const numbers = str.split(" ").map(s => parseInt(s));
-		if(numbers.length == 1){
-			if(numbers[0] == targetNumber) outputExpressions.push([numbers[0].toString()]);
-			continue;
-		}
-
-		const symbolsLength = numbers.length - 1;
-		let possibleExpressions = SYMBOLS.map((s) => numbers[0] + s);
-
-		for (let i = 1; i < symbolsLength; i++) {
-			const newPossibleExpressions = [];
-
-			possibleExpressions.forEach((combination) => {
-				SYMBOLS.forEach((symbol) => {
-					newPossibleExpressions.push(combination + numbers[i] + symbol);
-				});
-			});
-
-			possibleExpressions = newPossibleExpressions;
-		}
-		possibleExpressions = possibleExpressions.map((e) => e + numbers[numbers.length - 1]);
-
-		for (const pe of possibleExpressions) {
-			if (eval(pe) == targetNumber) outputExpressions.push(pe);
-		}
 	}
-	return outputExpressions;
+
+	dfs(0, "", 0, 0);
+	return results;
 }

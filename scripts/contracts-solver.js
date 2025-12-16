@@ -17,7 +17,8 @@ const SOLUTIONS = {
 	"Compression I: RLE Compression": solveCompressionI,
 	"Compression II: LZ Decompression": solveCompressionII,
 	"Compression III: LZ Compression": solveCompressionIII,
-	"Encryption I: Caesar Cipher": solveCaesarCipher,
+	"Encryption I: Caesar Cipher": solveEncryptionI,
+	"Encryption II: Vigenère Cipher": solveEncryptionII,
 	"Find All Valid Math Expressions": solveFindAllValidMathExpressions,
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
@@ -134,7 +135,7 @@ function calculateMaximumProfitWithLimitedTransactions(prices, maxTransactionsCo
  * @param {string} file Contract's file.
  * @returns {any} Answer to puzzle.
 */
-function solveCaesarCipher(ns, hostname, file) {
+function solveEncryptionI(ns, hostname, file) {
 	const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	const alphabetLength = alphabet.length;
 	const [text, shiftNumber] = ns.codingcontract.getData(file, hostname);
@@ -144,6 +145,29 @@ function solveCaesarCipher(ns, hostname, file) {
 		const letterIndex = (alphabet.indexOf(letter) - shiftNumber + alphabetLength) % alphabetLength;
 		return alphabet[letterIndex];
 	}).join("");
+}
+
+/** 
+ * Provides answer to "Encryption II: Vigenère Cipher" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveEncryptionII(ns, hostname, file) {
+	const alphabet = [..."ABCDEFGHIJKLMNOPQRSTUVWXYZ"];
+	const [plaintext, keyword] = ns.codingcontract.getData(file, hostname);
+	const keywordExtended = keyword.repeat(Math.ceil(plaintext.length / keyword.length)).slice(0, plaintext.length);
+	let result = [];
+
+	for (let i = 0; i < plaintext.length; i++) {
+		let index =
+			(alphabet.indexOf(plaintext[i]) + alphabet.indexOf(keywordExtended[i])) % alphabet.length;
+		result.push(alphabet[index]);
+	}
+
+	return result.join("");
 }
 
 /** 

@@ -29,6 +29,7 @@ const SOLUTIONS = {
 	"Shortest Path in a Grid": solveShortestPathInAGrid,
 	"Spiralize Matrix": solveSpiralizeMatrix,
 	"Subarray with Maximum Sum": solveSubarrayWithMaximumSum,
+	"Square Root": solveSquareRoot,
 	"Total Ways to Sum": solveTotalWaysToSum,
 	"Total Ways to Sum II": solveTotalWaysToSum2,
 	"Unique Paths in a Grid I": solveUniquePathsInAGridI,
@@ -855,4 +856,33 @@ function solveFindAllValidMathExpressions(ns, hostname, file) {
 
 	dfs(0, "", 0, 0);
 	return results;
+}
+
+/** 
+ * Provides answer to "Square Root" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveSquareRoot(ns, hostname, file) {
+	const n = BigInt(ns.codingcontract.getData(file, hostname));
+
+	if (n < 2n) return n;
+
+	let x = 1n << (BigInt(n.toString(2).length) >> 1n);
+	while (true) {
+		const y = (x + n / x) >> 1n;
+		if (y === x || y === x - 1n) {
+			// Decide rounding
+			const dx = n - x * x;
+			const dy = (x + 1n) * (x + 1n) - n;
+			x = dx <= dy ? x : x + 1n;
+			break;
+		}
+		x = y;
+	}
+
+	return x.toString();
 }

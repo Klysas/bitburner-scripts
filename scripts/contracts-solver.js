@@ -64,7 +64,7 @@ export async function main(ns) {
 			outputLines.push(`No solution for '${contract.file}'(TYPE: '${ns.codingcontract.getContractType(contract.file, contract.hostname)}') on [${contract.hostname}] server.`);
 		}
 	}
-	tprintLines(ns, ...outputLines);
+	tprintLines(ns, ...(outputLines.length ? outputLines : ["No unsolved contracts found."]));
 }
 
 /** 

@@ -22,6 +22,7 @@ const SOLUTIONS = {
 	"Find All Valid Math Expressions": solveFindAllValidMathExpressions,
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
+	"HammingCodes: Integer to Encoded Binary": solveHammingCodesIntegerToEncoded,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Minimum Path Sum in a Triangle": solveMinimumPathSumInATriangle,
 	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
@@ -885,4 +886,63 @@ function solveSquareRoot(ns, hostname, file) {
 	}
 
 	return x.toString();
+}
+
+/** 
+ * Provides answer to "HammingCodes: Integer to Encoded Binary" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveHammingCodesIntegerToEncoded(ns, hostname, file) {
+	const value = ns.codingcontract.getData(file, hostname);
+
+	// 1) Convert number to binary (MSB first)
+	const dataBits = value.toString(2).split("");
+
+	// 2) Determine parity positions
+	function isPowerOfTwo(n) {
+		return n > 0 && (n & (n - 1)) === 0;
+	}
+
+	// Build array with placeholders
+	const bits = [];
+	let dataIndex = 0;
+	let totalBits = dataBits.length;
+
+	// Count parity bits needed (excluding parity-0 for now)
+	while (1 << totalBits.toString(2).length < totalBits + 1) {
+		totalBits++;
+	}
+
+	// Insert bits (0-indexed)
+	for (let i = 0; dataIndex < dataBits.length; i++) {
+		if (i === 0 || isPowerOfTwo(i)) {
+			bits[i] = 0; // parity placeholder
+		} else {
+			bits[i] = Number(dataBits[dataIndex++]);
+		}
+	}
+
+	// 3) Compute parity bits (excluding parity-0)
+	for (let p = 1; p < bits.length; p <<= 1) {
+		let parity = 0;
+		for (let i = p; i < bits.length; i += 2 * p) {
+			for (let j = i; j < i + p && j < bits.length; j++) {
+				parity ^= bits[j];
+			}
+		}
+		bits[p] = parity;
+	}
+
+	// 4) Compute overall parity bit (position 0) LAST
+	let overallParity = 0;
+	for (let i = 1; i < bits.length; i++) {
+		overallParity ^= bits[i];
+	}
+	bits[0] = overallParity;
+
+	return bits.join("");
 }

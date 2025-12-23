@@ -50,7 +50,11 @@ export async function main(ns) {
 	if (command) {
 		const contract = argument ? findFiles(ns, ".cct").filter((f) => f.file.includes(argument))[0] : findFiles(ns, ".cct")[0];
 
-		tprintLines(ns, 200, `TYPE: '${ns.codingcontract.getContractType(contract.file, contract.hostname)}'`, "DESCRIPTION:", ns.codingcontract.getDescription(contract.file, contract.hostname));
+		if (contract == null) 
+			tprintLines(ns, "No contract found.");
+		else
+			tprintLines(ns, 200, `TYPE: '${ns.codingcontract.getContractType(contract.file, contract.hostname)}'`, "DESCRIPTION:", ns.codingcontract.getDescription(contract.file, contract.hostname));
+
 		return;
 	}
 

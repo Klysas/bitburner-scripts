@@ -23,6 +23,7 @@ const SOLUTIONS = {
 	"Find Largest Prime Factor": solveFindLargestPrimeFactor,
 	"Generate IP Addresses": solveGenerateIPAddresses,
 	"HammingCodes: Integer to Encoded Binary": solveHammingCodesIntegerToEncoded,
+	"HammingCodes: Encoded Binary to Integer": solveHammingCodesEncodedToInteger,
 	"Merge Overlapping Intervals": solveMergeOverlappingIntervals,
 	"Minimum Path Sum in a Triangle": solveMinimumPathSumInATriangle,
 	"Proper 2-Coloring of a Graph": solveProper2ColoringOfAGraph,
@@ -945,4 +946,67 @@ function solveHammingCodesIntegerToEncoded(ns, hostname, file) {
 	bits[0] = overallParity;
 
 	return bits.join("");
+}
+
+/** 
+ * Provides answer to "HammingCodes: Encoded Binary to Integer" type contract.
+ * 
+ * @param {NS} ns Netscript instance.
+ * @param {string} hostname Server on which contract is present.
+ * @param {string} file Contract's file.
+ * @returns {any} Answer to puzzle.
+*/
+function solveHammingCodesEncodedToInteger(ns, hostname, file) {
+	const encoded = ns.codingcontract.getData(file, hostname).split("").map(Number);
+	const n = encoded.length;
+
+	function isPowerOfTwo(x) {
+		return x > 0 && (x & (x - 1)) === 0;
+	}
+
+	// 1) Check parity bits (excluding position 0)
+	let errorPos = 0;
+
+	for (let p = 1; p < n; p <<= 1) {
+		let parity = 0;
+		for (let i = p; i < n; i += 2 * p) {
+			for (let j = i; j < i + p && j < n; j++) {
+				parity ^= encoded[j];
+			}
+		}
+		if (parity !== 0) {
+			errorPos ^= p;
+		}
+	}
+
+	// 2) Check overall parity (position 0)
+	let overallParity = 0;
+	for (let i = 1; i < n; i++) {
+		overallParity ^= encoded[i];
+	}
+
+	// 3) Fix error if needed
+	if (overallParity !== encoded[0]) {
+		if (errorPos === 0) {
+			// Error is in parity bit 0
+			encoded[0] ^= 1;
+		} else {
+			// Error in data or parity bit
+			encoded[errorPos] ^= 1;
+		}
+	}
+
+	// 4) Extract data bits (ignore parity positions)
+	const dataBits = [];
+	for (let i = 0; i < n; i++) {
+		if (i !== 0 && !isPowerOfTwo(i)) {
+			dataBits.push(encoded[i]);
+		}
+	}
+
+	// 5) Convert binary → decimal (BigInt safe)
+	const binaryStr = dataBits.join("");
+	const decimalValue = BigInt("0b" + binaryStr).toString();
+
+	return decimalValue;
 }
